@@ -19,7 +19,7 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Tailwind Config with Custom Maroon Palette -->
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -71,17 +71,31 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #801328;
         }
+
+        /* Glassmorphism & Immersive Glow Effects */
+        .glow-card {
+            box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px -4px rgba(74, 14, 23, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 25px 2px rgba(107, 20, 38, 0.35);
+        }
     </style>
 </head>
-<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased">
+<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased relative">
 
     <!-- Sidebar Navigation Area -->
     <aside id="sidebar" class="w-full md:w-64 bg-darkSidebar text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-30 min-h-screen border-r border-maroon-900/40">
         <div>
             <!-- Header Brand Sidebar -->
             <div class="p-5 border-b border-white/10 bg-gradient-to-b from-maroon-deep to-darkSidebar">
-                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow">
-                    Coffe Club'RS
+                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
+                    <i class="fa-solid fa-mug-hot text-amber-400"></i> Coffe Club'RS
                 </h1>
                 <p class="text-[10px] text-amber-200/70 font-semibold tracking-widest uppercase mt-0.5">
                     Multi-Cabang System
@@ -93,6 +107,7 @@
                 <span id="sidebarScopeText" class="text-amber-200/90 font-semibold">
                     <i class="fa-solid fa-store mr-1.5 text-amber-400"></i>Semua Cabang
                 </span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             </div>
 
             <!-- Menu Navigation Links -->
@@ -101,12 +116,12 @@
                     Menu Utama
                 </div>
 
-                <a href="dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30">
+                <a href="dashboard.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30 ambient-glow">
                     <i class="fa-solid fa-chart-pie text-amber-300 text-base"></i>
                     <span>Dashboard Exclusive</span>
                 </a>
 
-                <a href="laporan-penjualan.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="laporan-penjualan.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-receipt text-gray-400 text-base"></i>
                     <span>Laporan Penjualan</span>
                 </a>
@@ -115,12 +130,12 @@
                     Manajemen
                 </div>
 
-                <a href="kelola-pengguna.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="kelola-pengguna.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-users-gear text-gray-400 text-base"></i>
                     <span>Kelola Pengguna</span>
                 </a>
 
-                <a href="pengaturan-sistem.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="pengaturan-sistem.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-sliders text-gray-400 text-base"></i>
                     <span>Pengaturan Sistem</span>
                 </a>
@@ -129,8 +144,8 @@
                     Dukungan IT
                 </div>
 
-                <a href="lapor-bug.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors group">
-                    <i class="fa-solid fa-bug text-gray-400 group-hover:text-red-400 text-base"></i>
+                <a href="lapor-bug.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-bug text-gray-400 text-base"></i>
                     <span>Lapor Bug / Kendala</span>
                 </a>
             </nav>
@@ -151,19 +166,25 @@
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
         
-        <!-- Top Navigation Bar (Ringkas & Tanpa Judul Tumpuk) -->
+        <!-- Top Navigation Bar -->
         <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
             <div>
-                <p class="text-xs md:text-sm font-semibold text-amber-200/90">
-                    Monitoring Operasional & Penjualan Multi-Cabang Coffe Club'RS
+                <p class="text-xs md:text-sm font-semibold text-amber-200/90 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-amber-400"></i> Monitoring Operasional & Penjualan Multi-Cabang Coffe Club'RS
                 </p>
             </div>
 
             <div class="flex items-center space-x-3">
+                <!-- Audio Sound Toggle -->
+                <button onclick="toggleAudioMute()" id="audioToggleBtn" class="p-2 rounded-xl bg-maroon-800/80 hover:bg-maroon-700 text-amber-200 border border-maroon-600/40 text-xs transition-all" title="Aktifkan/Matikan Suara">
+                    <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+                </button>
+
                 <span class="hidden sm:inline-flex items-center text-xs bg-amber-400/20 text-amber-200 border border-amber-400/30 px-3 py-1 rounded-lg font-semibold">
                     <i class="fa-solid fa-user-shield mr-1.5 text-amber-300"></i> Executive Owner
                 </span>
-                <a href="../../login/index.html" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                
+                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
                     <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
                 </a>
@@ -174,10 +195,10 @@
         <main class="p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
             
             <!-- Executive Banner Bar -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 glow-card">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span id="bannerScopeBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md">
+                        <span id="bannerScopeBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
                             EXECUTIVE OWNER
                         </span>
                         <h3 class="text-base md:text-lg font-bold text-gray-900">
@@ -194,7 +215,7 @@
                     <label for="filterCabangGlobal" class="text-xs font-semibold text-amber-100 whitespace-nowrap pl-2 flex items-center">
                         <i class="fa-solid fa-filter text-amber-300 mr-2"></i>Filter Cabang:
                     </label>
-                    <select id="filterCabangGlobal" onchange="updateDashboardData()" class="bg-maroon-900/90 text-amber-100 border border-maroon-600 text-xs rounded-lg focus:ring-amber-400 focus:border-amber-400 p-2 font-semibold cursor-pointer focus:outline-none shadow-inner">
+                    <select id="filterCabangGlobal" onchange="handleGlobalFilterChange()" class="bg-maroon-900/90 text-amber-100 border border-maroon-600 text-xs rounded-lg p-2 font-semibold cursor-pointer focus:outline-none shadow-inner">
                         <option value="all" class="bg-maroon-900 text-amber-100" selected>Semua Cabang (Konsolidasi)</option>
                         <option value="senopati" class="bg-maroon-900 text-amber-100">Cabang Senopati</option>
                         <option value="kemang" class="bg-maroon-900 text-amber-100">Cabang Kemang</option>
@@ -206,7 +227,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 
                 <!-- Card 1: Omset Bulanan Total -->
-                <div class="lg:col-span-7 bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-6 shadow-md border border-maroon-800 text-white flex flex-col justify-between relative overflow-hidden">
+                <div class="lg:col-span-7 bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-6 shadow-md border border-maroon-800 text-white flex flex-col justify-between relative overflow-hidden glow-card">
                     <div>
                         <div class="flex items-start justify-between">
                             <div>
@@ -243,7 +264,7 @@
                 <div class="lg:col-span-5 flex flex-col gap-4 justify-between">
                     
                     <!-- Card 2: Laba Bersih -->
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow relative overflow-hidden flex-1 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 glow-card relative overflow-hidden flex-1 flex flex-col justify-between">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                         <div class="flex items-start justify-between">
                             <div>
@@ -265,7 +286,7 @@
                     </div>
 
                     <!-- Card 3: Total Penjualan Hari Ini -->
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow relative overflow-hidden flex-1 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 glow-card relative overflow-hidden flex-1 flex flex-col justify-between">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                         <div class="flex items-start justify-between">
                             <div>
@@ -294,7 +315,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
                 <!-- Left Column: Total Penjualan & Laba / Cabang -->
-                <div class="lg:col-span-5 bg-white rounded-2xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between space-y-4">
+                <div class="lg:col-span-5 bg-white rounded-2xl p-6 shadow-sm border border-gray-200 glow-card flex flex-col justify-between space-y-4">
                     <div>
                         <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
                             <div>
@@ -361,7 +382,7 @@
                     </div>
 
                     <div class="pt-2 text-center">
-                        <a href="laporan-penjualan.html" class="text-xs font-bold text-maroon-700 hover:text-maroon-900 inline-flex items-center space-x-1 transition-colors">
+                        <a href="laporan-penjualan.html" onclick="playAudio('click')" class="text-xs font-bold text-maroon-700 hover:text-maroon-900 inline-flex items-center space-x-1 transition-colors">
                             <span>Lihat Detail Laporan Per Cabang</span>
                             <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
@@ -369,7 +390,7 @@
                 </div>
 
                 <!-- Right Column: Line Chart -->
-                <div class="lg:col-span-7 bg-white rounded-2xl p-6 shadow-sm border border-gray-200 flex flex-col justify-between">
+                <div class="lg:col-span-7 bg-white rounded-2xl p-6 shadow-sm border border-gray-200 glow-card flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                             <div>
@@ -412,8 +433,65 @@
         </main>
     </div>
 
-    <!-- Interactive Dashboard Script -->
+    <!-- Web Audio API Synthesizer & Interactive Script -->
     <script>
+        let audioMuted = false;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playAudio(type = 'click') {
+            if (audioMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.04);
+                } else if (type === 'chime') {
+                    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.06);
+                        gain.gain.setValueAtTime(0.1, ctx.currentTime + idx * 0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.06 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + idx * 0.06);
+                        osc.stop(ctx.currentTime + idx * 0.06 + 0.3);
+                    });
+                }
+            } catch (e) { console.log("Audio not supported or blocked"); }
+        }
+
+        function toggleAudioMute() {
+            audioMuted = !audioMuted;
+            const icon = document.getElementById('audioIcon');
+            if (audioMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-300';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-200';
+                playAudio('chime');
+            }
+        }
+
         let salesChart = null;
 
         const branchData = {
@@ -520,23 +598,19 @@
             });
         }
 
-        function updateDashboardData() {
+        function handleGlobalFilterChange() {
+            playAudio('click');
             const selectedVal = document.getElementById('filterCabangGlobal').value;
-            
-            // Simpan pilihan cabang ke localStorage
             localStorage.setItem('selectedBranch', selectedVal);
 
             const data = branchData[selectedVal] || branchData.all;
 
-            // Sync Sidebar text
             const sidebarScopeText = document.getElementById('sidebarScopeText');
             if (sidebarScopeText) sidebarScopeText.innerHTML = data.scopeText;
 
-            // Sync Banner Badge
             const bannerScopeBadge = document.getElementById('bannerScopeBadge');
             if (bannerScopeBadge) bannerScopeBadge.innerText = selectedVal === 'all' ? 'EXECUTIVE OWNER' : selectedVal.toUpperCase();
 
-            // Update Cards Text
             document.getElementById('statOmsetSub').innerText = data.omsetSub;
             document.getElementById('statOmset').innerText = data.omset;
             document.getElementById('statLaba').innerText = data.laba;
@@ -573,15 +647,12 @@
 
         window.onload = function() {
             initChart();
-
-            // Baca pilihan cabang tersimpan dari localStorage
             const savedBranch = localStorage.getItem('selectedBranch') || 'all';
             const filterSelect = document.getElementById('filterCabangGlobal');
             if (filterSelect) {
                 filterSelect.value = savedBranch;
             }
-
-            updateDashboardData();
+            handleGlobalFilterChange();
         };
     </script>
 </body>

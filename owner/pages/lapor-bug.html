@@ -16,6 +16,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -67,16 +68,31 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #801328;
         }
+
+        /* Glassmorphism & Immersive Glow Effects */
+        .glow-card {
+            box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(74, 14, 23, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 25px 2px rgba(107, 20, 38, 0.35);
+        }
     </style>
 </head>
-<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased">
+<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased relative">
 
+    <!-- Sidebar Area -->
     <aside id="sidebar" class="w-full md:w-64 bg-darkSidebar text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-30 min-h-screen border-r border-maroon-900/40">
         <div>
             <!-- Header Brand Sidebar -->
             <div class="p-5 border-b border-white/10 bg-gradient-to-b from-maroon-deep to-darkSidebar">
-                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow">
-                    Coffe Club'RS
+                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
+                    <i class="fa-solid fa-mug-hot text-amber-400"></i> Coffe Club'RS
                 </h1>
                 <p class="text-[10px] text-amber-200/70 font-semibold tracking-widest uppercase mt-0.5">
                     Multi-Cabang System
@@ -88,6 +104,7 @@
                 <span id="sidebarScopeText" class="text-amber-200/90 font-semibold">
                     <i class="fa-solid fa-store mr-1.5 text-amber-400"></i>Semua Cabang
                 </span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             </div>
 
             <!-- Menu Navigation Links -->
@@ -96,12 +113,12 @@
                     Menu Utama
                 </div>
 
-                <a href="dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="dashboard.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-chart-pie text-gray-400 text-base"></i>
                     <span>Dashboard Exclusive</span>
                 </a>
 
-                <a href="laporan-penjualan.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="laporan-penjualan.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-receipt text-gray-400 text-base"></i>
                     <span>Laporan Penjualan</span>
                 </a>
@@ -110,12 +127,12 @@
                     Manajemen
                 </div>
 
-                <a href="kelola-pengguna.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="kelola-pengguna.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-users-gear text-gray-400 text-base"></i>
                     <span>Kelola Pengguna</span>
                 </a>
 
-                <a href="pengaturan-sistem.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="pengaturan-sistem.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-sliders text-gray-400 text-base"></i>
                     <span>Pengaturan Sistem</span>
                 </a>
@@ -124,7 +141,7 @@
                     Dukungan IT
                 </div>
 
-                <a href="lapor-bug.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30">
+                <a href="lapor-bug.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30 ambient-glow">
                     <i class="fa-solid fa-bug text-amber-300 text-base"></i>
                     <span>Lapor Bug / Kendala</span>
                 </a>
@@ -148,16 +165,22 @@
         <!-- Top Navigation Bar -->
         <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
             <div>
-                <p class="text-xs text-amber-200/80 font-medium">
-                    Monitoring Operasional & Penjualan Multi-Cabang Coffe Club'RS
+                <p class="text-xs text-amber-200/80 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-amber-400"></i> Monitoring Operasional & Penjualan Multi-Cabang Coffe Club'RS
                 </p>
             </div>
 
             <div class="flex items-center space-x-3">
+                <!-- Audio Sound Toggle -->
+                <button onclick="toggleAudioMute()" id="audioToggleBtn" class="p-2 rounded-xl bg-maroon-800/80 hover:bg-maroon-700 text-amber-200 border border-maroon-600/40 text-xs transition-all" title="Aktifkan/Matikan Suara">
+                    <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+                </button>
+
                 <span class="px-2.5 py-1 bg-amber-400/20 text-amber-200 border border-amber-400/30 rounded-lg text-[10px] font-bold tracking-wider uppercase">
                     Executive Owner
                 </span>
-                <a href="../../login/index.html" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                
+                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
                     <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
                 </a>
@@ -167,10 +190,10 @@
         <main class="p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
             
             <!-- Executive Banner Bar -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 glow-card">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span id="bannerBranchBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md">
+                        <span id="bannerBranchBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
                             EXECUTIVE OWNER
                         </span>
                         <h3 class="text-base md:text-lg font-bold text-gray-900">
@@ -197,7 +220,7 @@
             </div>
 
             <!-- Top IT Status Banner & SLA -->
-            <div class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep rounded-2xl p-6 text-white border border-maroon-800 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep rounded-2xl p-6 text-white border border-maroon-800 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 glow-card">
                 <div class="space-y-1">
                     <div class="inline-flex items-center space-x-2 bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-500/30">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
@@ -219,8 +242,9 @@
                 </div>
             </div>
 
+            <!-- Stat Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between glow-card">
                     <div>
                         <span class="text-xs text-gray-500 font-semibold uppercase block">Total Tiket Dilapor</span>
                         <h4 id="statBugTotal" class="text-2xl font-black text-gray-900 mt-1">4 Tiket</h4>
@@ -229,7 +253,7 @@
                         <i class="fa-solid fa-ticket"></i>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between glow-card">
                     <div>
                         <span class="text-xs text-gray-500 font-semibold uppercase block">Sedang Diproses Dev</span>
                         <h4 id="statBugInProgress" class="text-2xl font-black text-amber-600 mt-1">1 Tiket</h4>
@@ -238,7 +262,7 @@
                         <i class="fa-solid fa-spinner animate-spin"></i>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between glow-card">
                     <div>
                         <span class="text-xs text-gray-500 font-semibold uppercase block">Selesai / Resolved</span>
                         <h4 id="statBugResolved" class="text-2xl font-black text-emerald-600 mt-1">2 Tiket</h4>
@@ -247,7 +271,7 @@
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between glow-card">
                     <div>
                         <span class="text-xs text-gray-500 font-semibold uppercase block">Urgensi Critical</span>
                         <h4 id="statBugCritical" class="text-2xl font-black text-red-600 mt-1">1 Tiket</h4>
@@ -259,8 +283,8 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Form Kirim Kendala Baru (Left 5 cols) -->
-                <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                <!-- Form Kirim Kendala Baru -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4 glow-card">
                     <div class="border-b border-gray-100 pb-3 flex items-center space-x-3">
                         <div class="w-9 h-9 rounded-xl bg-red-50 text-maroon-700 flex items-center justify-center text-base font-bold border border-maroon-200">
                             <i class="fa-solid fa-bug"></i>
@@ -304,12 +328,12 @@
 
                         <div>
                             <label class="font-bold text-gray-700 block mb-1">Judul Ringkas Kendala</label>
-                            <input type="text" id="bugPageTitle" required placeholder="Contoh: Total omset cabang Kemang tidak update setelah transaksi" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800">
+                            <input type="text" id="bugPageTitle" required placeholder="Contoh: Total omset cabang Kemang tidak update..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800">
                         </div>
 
                         <div>
                             <label class="font-bold text-gray-700 block mb-1">Deskripsi Detail & Kronologi</label>
-                            <textarea id="bugPageDescription" rows="4" required placeholder="Jelaskan langkah-langkah yang dilakukan sebelum terjadi error..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800"></textarea>
+                            <textarea id="bugPageDescription" rows="4" required placeholder="Jelaskan langkah-langkah sebelum terjadi error..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800"></textarea>
                         </div>
 
                         <div>
@@ -328,8 +352,8 @@
                     </form>
                 </div>
 
-                <!-- Live Tracking Table & List (Right 7 cols) -->
-                <div class="lg:col-span-7 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between">
+                <!-- Live Tracking Table & List -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between glow-card">
                     <div>
                         <div class="p-5 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
@@ -363,6 +387,63 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script>
+        let audioMuted = false;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playAudio(type = 'click') {
+            if (audioMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.04);
+                } else if (type === 'chime') {
+                    const notes = [523.25, 659.25, 783.99];
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.06);
+                        gain.gain.setValueAtTime(0.1, ctx.currentTime + idx * 0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.06 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + idx * 0.06);
+                        osc.stop(ctx.currentTime + idx * 0.06 + 0.3);
+                    });
+                }
+            } catch (e) { console.log("Audio non-active"); }
+        }
+
+        function toggleAudioMute() {
+            audioMuted = !audioMuted;
+            const icon = document.getElementById('audioIcon');
+            if (audioMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-300';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-200';
+                playAudio('chime');
+            }
+        }
+
         let bugTicketsList = [
             {
                 id: "BUG-2026-104",
@@ -438,9 +519,8 @@
         }
 
         function filterBranchData() {
+            playAudio('click');
             const selectedBranch = document.getElementById('filterBranch').value;
-
-            // Simpan pilihan cabang ke localStorage
             localStorage.setItem('selectedBranch', selectedBranch);
 
             const sidebarScopeText = document.getElementById('sidebarScopeText');
@@ -472,7 +552,6 @@
                 filtered = bugTicketsList.filter(b => b.status === statusFilter);
             }
 
-            // Stat counters
             const total = bugTicketsList.length;
             const inProgress = bugTicketsList.filter(b => b.status === 'Diproses Dev').length;
             const resolved = bugTicketsList.filter(b => b.status === 'Selesai / Resolved').length;
@@ -535,6 +614,7 @@
         }
 
         function updatePageFileName(input) {
+            playAudio('click');
             const fileNameSpan = document.getElementById('bugPageFileName');
             if (input.files && input.files[0]) {
                 fileNameSpan.innerText = `File terlampir: ${input.files[0].name}`;
@@ -547,6 +627,8 @@
 
         function submitBugPageForm(e) {
             e.preventDefault();
+            playAudio('chime');
+            
             const module = document.getElementById('bugPageModule').value;
             const severity = document.getElementById('bugPageSeverity').value;
             const branch = document.getElementById('bugPageBranch').value;
@@ -569,7 +651,6 @@
             bugTicketsList.unshift(newTicket);
             renderBugTickets();
 
-            // Reset Form
             document.getElementById('bugPageTitle').value = '';
             document.getElementById('bugPageDescription').value = '';
             document.getElementById('bugPageFile').value = '';
@@ -580,13 +661,11 @@
         }
 
         window.onload = function() {
-            // Baca pilihan cabang tersimpan dari localStorage
             const savedBranch = localStorage.getItem('selectedBranch') || 'all';
             const filterSelect = document.getElementById('filterBranch');
             if (filterSelect) {
                 filterSelect.value = savedBranch;
             }
-
             filterBranchData();
             renderBugTickets();
         };

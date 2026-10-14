@@ -16,7 +16,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind Config with Custom Maroon Palette -->
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -68,17 +68,40 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #801328;
         }
+
+        /* Glassmorphism & Immersive Glow Effects */
+        .glow-card {
+            box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(74, 14, 23, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 25px 2px rgba(107, 20, 38, 0.35);
+        }
+
+        /* Thermal Receipt Feed Animation */
+        @keyframes printFeed {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-print {
+            animation: printFeed 0.4s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased">
+<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased relative">
 
     <!-- Sidebar Area -->
     <aside id="sidebar" class="w-full md:w-64 bg-darkSidebar text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-30 min-h-screen border-r border-maroon-900/40">
         <div>
             <!-- Header Brand Sidebar -->
             <div class="p-5 border-b border-white/10 bg-gradient-to-b from-maroon-deep to-darkSidebar">
-                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow">
-                    Coffe Club'RS
+                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
+                    <i class="fa-solid fa-mug-hot text-amber-400"></i> Coffe Club'RS
                 </h1>
                 <p class="text-[10px] text-amber-200/70 font-semibold tracking-widest uppercase mt-0.5">
                     Multi-Cabang System
@@ -90,6 +113,7 @@
                 <span id="sidebarScopeText" class="text-amber-200/90 font-semibold">
                     <i class="fa-solid fa-store mr-1.5 text-amber-400"></i>Semua Cabang
                 </span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             </div>
 
             <!-- Menu Navigation Links -->
@@ -98,12 +122,12 @@
                     Menu Utama
                 </div>
 
-                <a href="dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="dashboard.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-chart-pie text-gray-400 text-base"></i>
                     <span>Dashboard Exclusive</span>
                 </a>
 
-                <a href="laporan-penjualan.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30">
+                <a href="laporan-penjualan.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30 ambient-glow">
                     <i class="fa-solid fa-receipt text-amber-300 text-base"></i>
                     <span>Laporan Penjualan</span>
                 </a>
@@ -112,12 +136,12 @@
                     Manajemen
                 </div>
 
-                <a href="kelola-pengguna.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="kelola-pengguna.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-users-gear text-gray-400 text-base"></i>
                     <span>Kelola Pengguna</span>
                 </a>
 
-                <a href="pengaturan-sistem.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="pengaturan-sistem.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-sliders text-gray-400 text-base"></i>
                     <span>Pengaturan Sistem</span>
                 </a>
@@ -126,7 +150,7 @@
                     Dukungan IT
                 </div>
 
-                <a href="lapor-bug.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                <a href="lapor-bug.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
                     <i class="fa-solid fa-bug text-gray-400 text-base"></i>
                     <span>Lapor Bug / Kendala</span>
                 </a>
@@ -151,16 +175,22 @@
         <!-- Top Navigation Bar -->
         <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
             <div>
-                <p class="text-xs text-amber-200/80 font-medium">
-                    Monitoring Operasional & Penjualan Multi-Cabang Coffe Club'RS
+                <p class="text-xs text-amber-200/80 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-amber-400"></i> Monitoring Operasional & Penjualan Multi-Cabang Coffe Club'RS
                 </p>
             </div>
 
             <div class="flex items-center space-x-3">
+                <!-- Audio Sound Toggle -->
+                <button onclick="toggleAudioMute()" id="audioToggleBtn" class="p-2 rounded-xl bg-maroon-800/80 hover:bg-maroon-700 text-amber-200 border border-maroon-600/40 text-xs transition-all" title="Aktifkan/Matikan Suara">
+                    <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+                </button>
+
                 <span class="px-2.5 py-1 bg-amber-400/20 text-amber-200 border border-amber-400/30 rounded-lg text-[10px] font-bold tracking-wider uppercase">
                     Executive Owner
                 </span>
-                <a href="../../login/index.html" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                
+                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
                     <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
                 </a>
@@ -171,10 +201,10 @@
         <main class="p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
             
             <!-- Executive Control Banner Bar -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 glow-card">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span id="bannerBranchBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md">
+                        <span id="bannerBranchBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
                             KONSOLIDASI
                         </span>
                         <h3 class="text-base md:text-lg font-bold text-gray-900">
@@ -205,11 +235,11 @@
                 </div>
             </div>
 
-            <!-- Top Summary Cards (4 Cards) -->
+            <!-- Top Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 
                 <!-- Total Pendapatan -->
-                <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between">
+                <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between glow-card">
                     <div class="flex items-start justify-between">
                         <div>
                             <span class="text-[11px] font-bold text-amber-300/90 uppercase tracking-wider block mb-1">
@@ -229,7 +259,7 @@
                 </div>
 
                 <!-- Cash -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 glow-card flex flex-col justify-between relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div class="flex items-start justify-between">
                         <div>
@@ -250,7 +280,7 @@
                 </div>
 
                 <!-- QRIS -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 glow-card flex flex-col justify-between relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div class="flex items-start justify-between">
                         <div>
@@ -271,7 +301,7 @@
                 </div>
 
                 <!-- Debit -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 glow-card flex flex-col justify-between relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div class="flex items-start justify-between">
                         <div>
@@ -294,7 +324,7 @@
             </div>
 
             <!-- Table Card Area -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden glow-card">
                 
                 <!-- Table Controls Header -->
                 <div class="p-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50">
@@ -350,7 +380,7 @@
 
     <!-- Modal Detail Struk (Thermal Receipt Style) -->
     <div id="strukModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-gray-300 space-y-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-gray-300 space-y-4 animate-print">
             <button onclick="closeStrukModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -385,7 +415,7 @@
             <!-- Modal Actions -->
             <div class="pt-2 flex gap-2">
                 <button onclick="closeStrukModal()" class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors">Tutup</button>
-                <button onclick="showToast('Mencetak struk fisik ke printer thermal...', 'success')" class="w-full py-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold rounded-xl transition-colors flex items-center justify-center space-x-1.5">
+                <button onclick="printStrukAction()" class="w-full py-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold rounded-xl transition-colors flex items-center justify-center space-x-1.5 shadow-md">
                     <i class="fa-solid fa-print"></i>
                     <span>Cetak Struk</span>
                 </button>
@@ -397,6 +427,78 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script>
+        let audioMuted = false;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playAudio(type = 'click') {
+            if (audioMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.04);
+                } else if (type === 'chime') {
+                    const notes = [523.25, 659.25, 783.99];
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.06);
+                        gain.gain.setValueAtTime(0.1, ctx.currentTime + idx * 0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.06 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + idx * 0.06);
+                        osc.stop(ctx.currentTime + idx * 0.06 + 0.3);
+                    });
+                } else if (type === 'print') {
+                    for (let i = 0; i < 6; i++) {
+                        setTimeout(() => {
+                            const osc = ctx.createOscillator();
+                            const gain = ctx.createGain();
+                            osc.type = 'square';
+                            osc.frequency.setValueAtTime(800 + Math.random() * 400, ctx.currentTime);
+                            gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+                            osc.connect(gain);
+                            gain.connect(ctx.destination);
+                            osc.start();
+                            osc.stop(ctx.currentTime + 0.03);
+                        }, i * 50);
+                    }
+                }
+            } catch (e) { console.log("Audio non-active"); }
+        }
+
+        function toggleAudioMute() {
+            audioMuted = !audioMuted;
+            const icon = document.getElementById('audioIcon');
+            if (audioMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-300';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-200';
+                playAudio('chime');
+            }
+        }
+
         const transactions = [
             { id: "CC-2610-001", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 14:32 WIB", cashier: "Sarah Amelia", items: "2x Kopi Susu Coffe Club, 1x Artisan Butter Croissant", rawItems: [{name:"Kopi Susu Coffe Club", qty:2, price:25000}, {name:"Artisan Butter Croissant", qty:1, price:20000}], method: "QRIS", amount: 70000 },
             { id: "CC-2610-002", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 14:45 WIB", cashier: "Sarah Amelia", items: "1x Caramel Macchiato Oat, 1x Nasi Gila Senopati", rawItems: [{name:"Caramel Macchiato Oat", qty:1, price:38000}, {name:"Nasi Gila Senopati", qty:1, price:30000}], method: "Debit", amount: 68000 },
@@ -473,9 +575,8 @@
         }
 
         function filterBranchData() {
+            playAudio('click');
             const selectedBranch = document.getElementById('filterBranch').value;
-
-            // Simpan pilihan cabang ke localStorage
             localStorage.setItem('selectedBranch', selectedBranch);
 
             const sidebarScopeText = document.getElementById('sidebarScopeText');
@@ -500,7 +601,6 @@
                 if (tableSubtext) tableSubtext.innerText = 'Daftar struk transaksi kasir di seluruh cabang Coffe Club\'RS';
             }
 
-            // Update Summaries
             let total = 0, cash = 0, qris = 0, debit = 0;
             let cashCnt = 0, qrisCnt = 0, debitCnt = 0;
 
@@ -552,6 +652,7 @@
         }
 
         function openStrukModal(id) {
+            playAudio('click');
             const item = transactions.find(t => t.id === id);
             if(!item) return;
 
@@ -578,21 +679,26 @@
         }
 
         function closeStrukModal() {
+            playAudio('click');
             document.getElementById('strukModal').classList.add('hidden');
         }
 
+        function printStrukAction() {
+            playAudio('print');
+            showToast('Mencetak struk fisik ke printer thermal...', 'success');
+        }
+
         function openRekapModal() {
+            playAudio('chime');
             showToast("Rekapitulasi Laporan Penjualan Harian Berhasil Diunduh!", "success");
         }
 
         window.onload = function() {
-            // Baca pilihan cabang tersimpan dari localStorage
             const savedBranch = localStorage.getItem('selectedBranch') || 'all';
             const filterSelect = document.getElementById('filterBranch');
             if (filterSelect) {
                 filterSelect.value = savedBranch;
             }
-
             filterBranchData();
         };
     </script>

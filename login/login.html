@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffe Club'RS - Login Sistem Multi-Cabang</title>
+    <title>Coffe Club'RS - Immersive Login System</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,102 +51,156 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #1a1416;
+            background-color: #120c0e;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(74, 14, 23, 0.45) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(54, 8, 15, 0.6) 0%, transparent 50%),
-                radial-gradient(#3e040f 1px, transparent 1px);
+                radial-gradient(circle at 15% 25%, rgba(128, 19, 40, 0.4) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(74, 14, 23, 0.6) 0%, transparent 50%),
+                radial-gradient(#2d070e 1.5px, transparent 1.5px);
             background-size: 100% 100%, 100% 100%, 28px 28px;
+            overflow-x: hidden;
         }
 
         .glass-panel {
             background: rgba(245, 242, 234, 0.94);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(128, 19, 40, 0.25);
         }
 
         .hero-glow {
-            box-shadow: 0 20px 60px -15px rgba(128, 19, 40, 0.5);
+            box-shadow: 0 25px 70px -15px rgba(128, 19, 40, 0.6), 0 0 20px rgba(217, 155, 38, 0.15);
         }
 
         .brand-text-shadow {
-            text-shadow: 0 4px 18px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6);
+            text-shadow: 0 4px 20px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.7);
+        }
+
+        /* Particles Animation Canvas */
+        #particleCanvas {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Custom Input Glow */
+        .pill-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pill-input:focus {
+            box-shadow: 0 0 0 4px rgba(128, 19, 40, 0.15), 0 8px 20px -4px rgba(128, 19, 40, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Pulse Ring */
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+        .animate-subtle-pulse {
+            animation: subtlePulse 4s ease-in-out infinite;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center p-3 md:p-6 text-gray-800 antialiased relative">
 
+    <!-- Particle Overlay Canvas for Coffee Steam/Ambient Light -->
+    <canvas id="particleCanvas"></canvas>
+
     <header class="w-full max-w-6xl flex justify-between items-center py-2 px-4 z-20">
-        <div class="flex items-center space-x-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-            <span class="text-xs font-bold text-amber-100/90 tracking-widest uppercase">Coffe Club'RS POS System v3.0</span>
+        <div class="flex items-center space-x-3">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <span class="text-xs font-bold text-amber-100/90 tracking-widest uppercase flex items-center gap-2">
+                <span>Coffe Club'RS POS v3.0</span>
+                <span class="hidden sm:inline-block px-2 py-0.5 rounded bg-maroon-deep/80 text-[10px] text-amber-300 border border-maroon-700">Immersive Edition</span>
+            </span>
         </div>
-        <div class="text-xs text-amber-200/70 font-semibold hidden sm:block">
-            <i class="fa-solid fa-store mr-1.5 text-amber-400"></i> Multi-Cabang System
+        
+        <div class="flex items-center space-x-4 text-xs">
+            <button id="soundToggleBtn" onclick="toggleAudioEngine()" class="px-3 py-1.5 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full text-amber-200 border border-amber-500/30 transition-all flex items-center space-x-2">
+                <i id="soundIcon" class="fa-solid fa-volume-high text-amber-400"></i>
+                <span id="soundText" class="font-semibold text-[11px]">Audio On</span>
+            </button>
+            
+            <div class="text-xs text-amber-200/80 font-semibold hidden sm:flex items-center">
+                <i class="fa-solid fa-store mr-1.5 text-amber-400"></i> Multi-Cabang System
+            </div>
         </div>
     </header>
 
-    <main class="w-full max-w-6xl my-auto z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 hero-glow bg-[#1f181a]">
+    <main class="w-full max-w-6xl my-auto z-10 py-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 rounded-[2.5rem] overflow-hidden hero-glow bg-[#1f181a] border border-white/10 transition-all duration-500">
             
-            <div class="lg:col-span-7 relative min-h-[320px] lg:min-h-[620px] flex flex-col justify-between p-8 md:p-12 overflow-hidden group">
-                <!-- Background Coffee Cup Photo -->
+            <!-- Left Hero Section with Photo & Vignette -->
+            <div class="lg:col-span-7 relative min-h-[360px] lg:min-h-[640px] flex flex-col justify-between p-8 md:p-12 overflow-hidden group">
+                <!-- Coffee Cup Background -->
                 <img 
                     src="Gemini_Generated_Image_q2adxpq2adxpq2ad.jpg" 
                     alt="Coffe Club'RS Premium Beans" 
                     onerror="this.src='https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1200&auto=format&fit=crop'"
-                    class="absolute inset-0 w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-1000 brightness-90"
+                    class="absolute inset-0 w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-1000 brightness-90 animate-subtle-pulse"
                 />
                 
-                <!-- Dark Crimson Vignette Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-maroon-deep via-maroon-deep/40 to-transparent opacity-90"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-maroon-deep/80 via-transparent to-maroon-deep/90"></div>
+                <!-- Dark Crimson Vignette Gradient Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-maroon-deep via-maroon-deep/50 to-transparent opacity-95"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-maroon-deep/90 via-maroon-deep/40 to-maroon-deep/90"></div>
 
-                <!-- Top Left Badge Overlay -->
-                <div class="relative z-10 flex items-center space-x-2">
-                    <span class="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[11px] font-bold text-amber-300 border border-amber-500/30 uppercase tracking-widest">
-                        <i class="fa-solid fa-mug-hot mr-1.5"></i> Artisan Coffee & Bakery
+                <!-- Top Badge Overlay -->
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="px-3.5 py-1.5 bg-black/50 backdrop-blur-md rounded-full text-[11px] font-bold text-amber-300 border border-amber-500/30 uppercase tracking-widest flex items-center shadow-lg">
+                        <i class="fa-solid fa-mug-hot mr-2 text-amber-400 animate-bounce"></i> Artisan Coffee & Bakery
+                    </span>
+                    
+                    <span class="text-[11px] text-amber-200/80 font-mono bg-maroon-deep/80 px-3 py-1 rounded-full border border-maroon-700">
+                        Senopati • Kemang
                     </span>
                 </div>
 
-                <!-- Main Brand Overlay Typography -->
+                <!-- Brand Typography -->
                 <div class="relative z-10 my-auto py-8">
                     <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight font-serif brand-text-shadow leading-tight">
                         Coffe Club'RS
                     </h1>
-                    <p class="text-amber-200/90 text-sm md:text-base font-medium mt-3 max-w-md brand-text-shadow leading-relaxed">
+                    <p class="text-amber-200/90 text-sm md:text-base font-medium mt-4 max-w-md brand-text-shadow leading-relaxed">
                         Sistem Informasi Manajemen Kasir POS & Monitoring Operasional Penjualan Multi-Cabang.
                     </p>
-                    <div class="mt-6 flex flex-wrap gap-2 text-xs text-amber-100/80 font-semibold">
-                        <span class="px-3 py-1.5 bg-maroon-vintage/80 backdrop-blur-sm rounded-xl border border-maroon-600/40">
-                            <i class="fa-solid fa-chart-line text-amber-400 mr-1.5"></i> Dashboard Owner
+                    
+                    <div class="mt-8 flex flex-wrap gap-2.5 text-xs text-amber-100/90 font-semibold">
+                        <span class="px-3.5 py-2 bg-maroon-vintage/80 backdrop-blur-md rounded-xl border border-maroon-600/50 flex items-center shadow-md">
+                            <i class="fa-solid fa-chart-line text-amber-400 mr-2"></i> Dashboard Owner
                         </span>
-                        <span class="px-3 py-1.5 bg-maroon-vintage/80 backdrop-blur-sm rounded-xl border border-maroon-600/40">
-                            <i class="fa-solid fa-cash-register text-amber-400 mr-1.5"></i> Kasir & Struk
+                        <span class="px-3.5 py-2 bg-maroon-vintage/80 backdrop-blur-md rounded-xl border border-maroon-600/50 flex items-center shadow-md">
+                            <i class="fa-solid fa-cash-register text-amber-400 mr-2"></i> Kasir & Struk Thermal
                         </span>
                     </div>
                 </div>
 
                 <!-- Bottom Quote Banner -->
-                <div class="relative z-10 pt-4 border-t border-white/10 flex justify-between items-center text-xs text-amber-200/70">
-                    <span>© 2026 Coffe Club'RS Indonesia</span>
-                    <span class="font-mono text-[11px] text-gray-400">Senopati • Kemang</span>
+                <div class="relative z-10 pt-4 border-t border-white/15 flex justify-between items-center text-xs text-amber-200/70">
+                    <span class="font-medium">© 2026 Coffe Club'RS Indonesia</span>
+                    <span class="font-mono text-[11px] text-emerald-400 flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> Systems Operational
+                    </span>
                 </div>
             </div>
 
+            <!-- Right Form Section -->
             <div class="lg:col-span-5 glass-panel p-8 md:p-12 flex flex-col justify-center relative">
                 
                 <!-- Form Header -->
                 <div class="mb-8">
                     <div class="inline-flex items-center space-x-2 text-maroon-700 text-xs font-bold uppercase tracking-widest mb-2">
-                        <span class="w-2 h-2 rounded-full bg-maroon-700"></span>
+                        <span class="w-2 h-2 rounded-full bg-maroon-700 animate-ping"></span>
                         <span>Portal Otorisasi Akun</span>
                     </div>
                     <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
                         Selamat Datang!
                     </h2>
-                    <p class="text-xs text-gray-600 font-medium mt-1.5">
-                        Masukkan kredensial akun untuk mengakses dasbor sistem kedai.
+                    <p class="text-xs text-gray-600 font-medium mt-2 leading-relaxed">
+                        Masukkan kredensial akun terdaftar untuk mengakses portal dasbor sistem kedai.
                     </p>
                 </div>
 
@@ -158,15 +212,16 @@
                             Username / ID Pengguna
                         </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-maroon-700">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-maroon-700 z-10">
                                 <i class="fa-regular fa-user text-sm"></i>
                             </div>
                             <input 
                                 type="text" 
                                 id="username" 
                                 required
-                                placeholder="Contoh: owner, senopati, atau kasir" 
-                                class="w-full pl-11 pr-5 py-3.5 bg-white border border-gray-300/80 rounded-full text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-maroon-700 focus:border-maroon-700 shadow-sm transition-all duration-200"
+                                autocomplete="username"
+                                placeholder="Masukkan username resmi Anda" 
+                                class="pill-input w-full pl-11 pr-5 py-3.5 bg-white border border-gray-300/90 rounded-full text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-maroon-700 shadow-sm"
                             >
                         </div>
                     </div>
@@ -177,21 +232,22 @@
                             Kata Sandi (Password)
                         </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-maroon-700">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-maroon-700 z-10">
                                 <i class="fa-solid fa-lock text-sm"></i>
                             </div>
                             <input 
                                 type="password" 
                                 id="password" 
                                 required
+                                autocomplete="current-password"
                                 placeholder="••••••••" 
-                                class="w-full pl-11 pr-12 py-3.5 bg-white border border-gray-300/80 rounded-full text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-maroon-700 focus:border-maroon-700 shadow-sm transition-all duration-200"
+                                class="pill-input w-full pl-11 pr-12 py-3.5 bg-white border border-gray-300/90 rounded-full text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-maroon-700 shadow-sm"
                             >
                             <!-- Password Eye Toggle -->
                             <button 
                                 type="button" 
                                 onclick="togglePassword()"
-                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-maroon-700 focus:outline-none transition-colors"
+                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-maroon-700 focus:outline-none transition-colors z-10"
                                 aria-label="Tampilkan password"
                             >
                                 <i id="toggleIcon" class="fa-regular fa-eye text-sm"></i>
@@ -202,7 +258,7 @@
                     <!-- Remember me Checkbox -->
                     <div class="flex items-center justify-between text-xs pt-1 px-2">
                         <label class="flex items-center space-x-2 cursor-pointer select-none">
-                            <input type="checkbox" checked class="w-4 h-4 text-maroon-700 rounded border-gray-300 focus:ring-maroon-700">
+                            <input type="checkbox" checked class="w-4 h-4 text-maroon-700 rounded border-gray-300 focus:ring-maroon-700 cursor-pointer">
                             <span class="text-gray-600 font-medium text-[11px]">Ingat akun di perangkat ini</span>
                         </label>
                     </div>
@@ -210,7 +266,7 @@
                     <!-- Submit Pill Button -->
                     <button 
                         type="submit" 
-                        class="w-full bg-gradient-to-r from-maroon-vintage via-maroon-accent to-maroon-deep hover:from-maroon-deep hover:to-maroon-vintage text-amber-100 font-bold py-4 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2 text-xs tracking-wider uppercase border border-maroon-600/40 mt-3 group"
+                        class="w-full bg-gradient-to-r from-maroon-vintage via-maroon-accent to-maroon-deep hover:from-maroon-deep hover:to-maroon-vintage text-amber-100 font-bold py-4 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2 text-xs tracking-wider uppercase border border-maroon-600/40 mt-4 group"
                     >
                         <span>Masuk Ke Dashboard</span>
                         <i class="fa-solid fa-arrow-right text-amber-300 transform group-hover:translate-x-1.5 transition-transform duration-200"></i>
@@ -219,9 +275,9 @@
 
                 <!-- Footer Security Badge -->
                 <div class="mt-8 pt-5 border-t border-gray-300/60 text-center">
-                    <p class="text-[10px] text-gray-500 flex items-center justify-center space-x-1">
+                    <p class="text-[10px] text-gray-500 flex items-center justify-center space-x-1.5">
                         <i class="fa-solid fa-shield-halved text-maroon-700"></i>
-                        <span>Terproteksi Sistem Enkripsi Multi-Branch Coffe Club'RS</span>
+                        <span>Enkripsi Sesi Otorisasi Multi-Branch Coffe Club'RS</span>
                     </p>
                 </div>
             </div>
@@ -235,24 +291,23 @@
         </p>
     </footer>
 
-    <!-- Modal Notifikasi Simulasi Login -->
-    <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-opacity">
+    <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-opacity duration-300">
         <div class="bg-cardBg rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center border border-maroon-900/40 transform scale-95 transition-all duration-300 relative space-y-4">
             
-            <div id="modalIconBg" class="w-16 h-16 bg-maroon-100 text-maroon-700 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-maroon-200">
+            <div id="modalIconBg" class="w-16 h-16 bg-maroon-100 text-maroon-700 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-maroon-200 animate-bounce">
                 <i id="modalIcon" class="fa-solid fa-user-shield"></i>
             </div>
 
             <div>
                 <h3 class="text-lg font-extrabold text-gray-900" id="modalTitle">Login Berhasil!</h3>
-                <p class="text-xs text-gray-600 mt-1 leading-relaxed" id="modalMessage">Mengarahkan ke dashboard sistem...</p>
+                <p class="text-xs text-gray-600 mt-2 leading-relaxed" id="modalMessage">Mengarahkan ke dashboard sistem...</p>
             </div>
             
             <div class="pt-2">
                 <button 
                     id="modalRedirectBtn"
                     onclick="proceedRedirect()" 
-                    class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 rounded-full text-xs font-bold transition-colors shadow-md flex items-center justify-center space-x-2"
+                    class="w-full py-3.5 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 rounded-full text-xs font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
                 >
                     <span>Lanjutkan ke Dashboard</span>
                     <i class="fa-solid fa-arrow-right text-amber-300"></i>
@@ -262,7 +317,68 @@
     </div>
 
     <script>
-        let targetRedirectUrl = "owner/pages/dashboard.html";
+        let targetRedirectUrl = "index.html";
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        // Web Audio API Sound Generator
+        function playSynthesizedSound(type) {
+            if (!audioEnabled) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                } else if (type === 'success') {
+                    const now = audioCtx.currentTime;
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.start();
+                    osc.stop(now + 0.4);
+                }
+            } catch(e) {
+                console.debug('Audio context initialized after user interaction.');
+            }
+        }
+
+        function toggleAudioEngine() {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('soundIcon');
+            const text = document.getElementById('soundText');
+            if (audioEnabled) {
+                icon.className = "fa-solid fa-volume-high text-amber-400";
+                text.innerText = "Audio On";
+                playSynthesizedSound('click');
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-gray-400";
+                text.innerText = "Audio Muted";
+            }
+        }
+
+        // Add tactile sound to all buttons
+        document.querySelectorAll('button, input').forEach(el => {
+            el.addEventListener('click', () => playSynthesizedSound('click'));
+        });
 
         function togglePassword() {
             const passwordInput = document.getElementById('password');
@@ -281,6 +397,7 @@
 
         function handleLogin(event) {
             event.preventDefault();
+            playSynthesizedSound('success');
             
             const username = document.getElementById('username').value.trim().toLowerCase();
             const modal = document.getElementById('loginModal');
@@ -291,28 +408,79 @@
 
             if (username.includes('owner') || username.includes('pemilik') || username.includes('rifki')) {
                 roleName = "Executive Owner";
-                targetRedirectUrl = "owner/pages/dashboard.html";
+                targetRedirectUrl = "index.html";
             } else if (username.includes('cabang') || username.includes('kcabang') || username.includes('manajer') || username.includes('senopati')) {
                 roleName = "Manajer Cabang";
-                targetRedirectUrl = "owner/pages/dashboard.html";
+                targetRedirectUrl = "index.html";
             } else if (username.includes('kasir') || username.includes('pos') || username.includes('kemang')) {
                 roleName = "Petugas Kasir POS";
-                targetRedirectUrl = "owner/pages/laporan-penjualan.html";
+                targetRedirectUrl = "index.html";
             } else {
                 roleName = `User (${username})`;
-                targetRedirectUrl = "owner/pages/dashboard.html";
+                targetRedirectUrl = "index.html";
             }
 
-            modalTitle.innerText = `Selamat Datang!`;
-            modalMessage.innerHTML = `Otorisasi berhasil. Anda masuk sebagai <strong>${roleName}</strong>.<br><span class="text-[11px] text-maroon-700 font-semibold mt-2 block">Klik tombol di bawah untuk membuka dashboard.</span>`;
+            modalTitle.innerText = `Otorisasi Berhasil!`;
+            modalMessage.innerHTML = `Selamat datang kembali. Anda terverifikasi sebagai <strong>${roleName}</strong>.<br><span class="text-[11px] text-maroon-700 font-semibold mt-2 block">Klik tombol di bawah untuk membuka dasbor.</span>`;
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
 
         function proceedRedirect() {
+            playSynthesizedSound('click');
             window.location.href = targetRedirectUrl;
         }
+
+        // Ambient Floating Coffee Steam Particle Effect
+        function initParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const particles = Array.from({ length: 35 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2.5 + 0.5,
+                alpha: Math.random() * 0.4 + 0.1,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: -Math.random() * 0.5 - 0.2
+            }));
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.y < 0) {
+                        p.y = canvas.height;
+                        p.x = Math.random() * canvas.width;
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(217, 155, 38, ${p.alpha})`;
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#D99B26';
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        window.onload = function() {
+            initParticles();
+        };
     </script>
 </body>
 </html>
