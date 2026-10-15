@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffe Club'RS - Lapor Bug & Kendala IT Kepala Cabang</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        maroon: {
+                            50: '#fdf2f4',
+                            100: '#fbe5e8',
+                            200: '#f7ced5',
+                            500: '#c22947',
+                            600: '#a31d36',
+                            700: '#801328',
+                            800: '#5c0b1b',
+                            900: '#3e040f',
+                            vintage: '#4A0E17',
+                            deep: '#36080F',
+                            accent: '#6B1426',
+                            hover: '#5A101E'
+                        },
+                        creamBg: '#F8F6F2',
+                        cardBg: '#FFFFFF',
+                        darkSidebar: '#1B1315'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F4F1EA;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1B1315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4A0E17;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #801328;
+        }
+
+        .glow-card {
+            box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(74, 14, 23, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 25px 2px rgba(107, 20, 38, 0.35);
+        }
+    </style>
+</head>
+<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased relative">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="w-full md:w-64 bg-darkSidebar text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-30 min-h-screen border-r border-maroon-900/40">
+        <div>
+            <!-- Header Brand Sidebar -->
+            <div class="p-5 border-b border-white/10 bg-gradient-to-b from-maroon-deep to-darkSidebar">
+                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
+                    <i class="fa-solid fa-mug-hot text-amber-400"></i> Coffe Club'RS
+                </h1>
+                <p class="text-[10px] text-amber-200/70 font-semibold tracking-widest uppercase mt-0.5">
+                    Branch Manager System
+                </p>
+            </div>
+
+            <!-- Active Scope Indicator -->
+            <div class="px-5 py-3 bg-maroon-vintage/40 border-b border-white/5 flex items-center justify-between text-xs">
+                <span id="sidebarScopeText" class="text-amber-200/90 font-semibold flex items-center">
+                    <i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang Senopati
+                </span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            </div>
+
+            <!-- Menu Navigation Links -->
+            <nav class="p-3 space-y-1 text-sm font-medium">
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 px-3 pt-3 pb-1 font-bold">
+                    Operasional Outlet
+                </div>
+
+                <a href="dashboard.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-chart-line text-gray-400 text-base"></i>
+                    <span>Dashboard Outlet</span>
+                </a>
+
+                <a href="stock-dan-bahan-baku.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-boxes-stacked text-gray-400 text-base"></i>
+                    <span>Stok & Bahan Baku</span>
+                </a>
+
+                <a href="jadwal-absensi-staf.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-id-card-clip text-gray-400 text-base"></i>
+                    <span>Jadwal & Absensi Staf</span>
+                </a>
+
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 px-3 pt-4 pb-1 font-bold">
+                    Pelaporan
+                </div>
+
+                <a href="laporan-penjualan.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-file-invoice-dollar text-gray-400 text-base"></i>
+                    <span>Laporan Penjualan</span>
+                </a>
+
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 px-3 pt-4 pb-1 font-bold">
+                    Bantuan & IT
+                </div>
+
+                <a href="lapor-bug.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30 ambient-glow">
+                    <i class="fa-solid fa-bug text-amber-300 text-base"></i>
+                    <span>Lapor Bug / Kendala</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Footer -->
+        <div class="p-4 border-t border-white/10 text-xs text-gray-400 bg-black/20 space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="flex items-center text-emerald-400 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span> Shift Aktif: Pagi
+                </span>
+                <span class="text-[10px] font-mono text-gray-500">v3.0</span>
+            </div>
+            <p class="text-[10px] text-gray-500 text-center">© 2026 Coffe Club'RS System</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        
+        <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
+            <div>
+                <p class="text-xs md:text-sm font-semibold text-amber-200/90 flex items-center gap-2">
+                    <i class="fa-solid fa-user-tie text-amber-400"></i> Panel Kerja Kepala Cabang — Coffe Club'RS
+                </p>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleAudioMute()" id="audioToggleBtn" class="p-2 rounded-xl bg-maroon-800/80 hover:bg-maroon-700 text-amber-200 border border-maroon-600/40 text-xs transition-all" title="Aktifkan/Matikan Suara">
+                    <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+                </button>
+
+                <!-- Verified Session Badge -->
+                <span class="px-3 py-1 bg-amber-400/20 text-amber-200 border border-amber-400/30 rounded-xl text-xs font-bold tracking-wider uppercase flex items-center space-x-1.5 shadow-sm">
+                    <i class="fa-solid fa-shield-check text-emerald-400"></i>
+                    <span>Cabang Senopati</span>
+                </span>
+                
+                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                    <span>Keluar</span>
+                    <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                </a>
+            </div>
+        </header>
+
+        <main class="p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
+            
+            <!-- Banner Control Bar -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 glow-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
+                            DUKUNGAN IT OUTLET
+                        </span>
+                        <h3 class="text-base md:text-lg font-bold text-gray-900">
+                            Lapor Bug & Kendala Teknis Cabang Senopati
+                        </h3>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Kirim laporan masalah POS, mesin printer thermal, sinkronisasi stok, atau absensi langsung ke Tim Developer IT.
+                    </p>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span>Dev Response SLA: &lt; 15 Menit</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Summary Stats Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- Total Tiket Outlet -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80 glow-card relative overflow-hidden flex flex-col justify-between border-l-[6px] border-l-maroon-800">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                                Tiket Dilaporkan
+                            </span>
+                            <h4 id="statTotalTickets" class="text-2xl font-black text-gray-900 tracking-tight">
+                                3 Tiket
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg border border-maroon-100">
+                            <i class="fa-solid fa-ticket"></i>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-400 mt-3 font-medium">
+                        Riwayat laporan Cabang Senopati
+                    </p>
+                </div>
+
+                <!-- Tiket Diproses -->
+                <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between glow-card">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-amber-300/90 uppercase tracking-wider block mb-1">
+                                Sedang Diproses Dev
+                            </span>
+                            <h4 id="statInProgressTickets" class="text-2xl font-black text-amber-50 tracking-tight">
+                                1 Kendala
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-spinner animate-spin"></i>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-amber-200/80 mt-3 font-medium truncate">
+                        BUG-2026-SNP-03: Printer Thermal Lag
+                    </p>
+                </div>
+
+                <!-- Tiket Selesai -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80 glow-card relative overflow-hidden flex flex-col justify-between border-l-[6px] border-l-emerald-600">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                                Tiket Terselesaikan
+                            </span>
+                            <h4 id="statResolvedTickets" class="text-2xl font-black text-emerald-700 tracking-tight">
+                                2 Selesai
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg border border-emerald-100">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-emerald-800/80 mt-3 font-medium">
+                        Fitur berjalan normal kembali
+                    </p>
+                </div>
+
+                <!-- Critical Alerts -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80 glow-card relative overflow-hidden flex flex-col justify-between border-l-[6px] border-l-amber-500">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                                Tingkat Urgensi
+                            </span>
+                            <h4 class="text-2xl font-black text-amber-800 tracking-tight">
+                                Normal
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg border border-amber-100">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-amber-800/80 mt-3 font-medium">
+                        Sistem kasir utama beroperasional
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Form & Ticket Tracking Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Form Bug Report (Left 5 Cols) -->
+                <div class="lg:col-span-5 bg-white rounded-2xl p-6 shadow-sm border border-gray-200 glow-card space-y-4">
+                    <div class="border-b border-gray-100 pb-3 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg font-bold border border-maroon-200">
+                            <i class="fa-solid fa-bug"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-base">Form Lapor Kendala Teknis Baru</h4>
+                            <p class="text-xs text-gray-500">Kirim detail error untuk penanganan cepat</p>
+                        </div>
+                    </div>
+
+                    <form onsubmit="submitBugReport(event)" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="font-bold text-gray-700 block mb-1">Modul / Fitur Terkendala</label>
+                            <select id="bugModule" required class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                                <option value="Mesin Kasir & POS">Mesin Kasir & Transaksi POS</option>
+                                <option value="Printer Thermal ESC/POS">Printer Thermal & Cetak Resi</option>
+                                <option value="Presensi & Absensi Fingerprint">Presensi & Shift Staf</option>
+                                <option value="Stok & Opname Bahan Baku">Stok & Pengajuan Restock</option>
+                                <option value="Laporan Penjualan">Laporan Penjualan & Struk</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="font-bold text-gray-700 block mb-1">Tingkat Urgensi</label>
+                                <select id="bugUrgency" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                                    <option value="Rendah">Rendah (Pertanyaan / Minor)</option>
+                                    <option value="Sedang" selected>Sedang (Fitur Terganggu)</option>
+                                    <option value="Critical">Critical (Kasir / Outlet Down)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="font-bold text-gray-700 block mb-1">Perangkat Terdampak</label>
+                                <select id="bugDevice" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                                    <option value="Tablet POS Bar">Tablet POS Barista</option>
+                                    <option value="Printer Resi Thermal">Printer Thermal BT/USB</option>
+                                    <option value="Mesin Fingerprint">Mesin Tap Absensi</option>
+                                    <option value="PC Utama Kasir">PC Utama Kasir</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-gray-700 block mb-1">Judul Kendala</label>
+                            <input type="text" id="bugTitle" required placeholder="Contoh: Resi transaksi QRIS tidak otomatis tercetak di printer thermal" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800">
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-gray-700 block mb-1">Deskripsi Detail & Kronologi Error</label>
+                            <textarea id="bugDescription" rows="4" required placeholder="Jelaskan kronologi kejadian, pesan error yang muncul, atau langkah yang sudah dicoba..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-gray-700 block mb-1">Lampiran Foto Bukti Screenshot / Error</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-xl p-3.5 text-center bg-gray-50 hover:bg-amber-50/30 transition-colors cursor-pointer" onclick="document.getElementById('bugFileInput').click()">
+                                <i class="fa-solid fa-cloud-arrow-up text-maroon-700 text-2xl mb-1 block"></i>
+                                <span id="fileNamePreview" class="text-gray-500 font-medium text-[11px]">Klik untuk mengunggah screenshot (PNG, JPG)</span>
+                                <input type="file" id="bugFileInput" accept="image/*" class="hidden" onchange="previewFileName(this)">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-paper-plane text-amber-300"></i>
+                            <span>Kirim Laporan Ke Developer IT</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Ticket Tracking List (Right 7 Cols) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-200 glow-card overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <!-- Header & Filter -->
+                        <div class="p-5 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-base">Tracking Tiket Laporan Cabang Senopati</h4>
+                                <p class="text-xs text-gray-500">Pantau proses perbaikan kendala oleh Tim Developer IT</p>
+                            </div>
+
+                            <select id="filterBugStatus" onchange="renderBugTickets()" class="px-3 py-2 text-xs border border-gray-300 rounded-xl font-semibold bg-white text-gray-700 focus:outline-none cursor-pointer">
+                                <option value="all">Semua Status Tiket</option>
+                                <option value="Menunggu Review">Menunggu Review</option>
+                                <option value="Diproses Dev">Sedang Diproses Dev</option>
+                                <option value="Selesai / Resolved">Selesai / Resolved</option>
+                            </select>
+                        </div>
+
+                        <!-- Ticket List Cards Container -->
+                        <div id="bugTicketsContainer" class="p-5 space-y-4 max-h-[620px] overflow-y-auto">
+                            <!-- Populated dynamically via JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
+                        <span>Menampilkan kendala terdaftar Cabang Senopati</span>
+                        <span class="font-semibold text-maroon-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrows-rotate animate-spin"></i> Synchronized with Cloud Server
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <script>
+        let senopatiBugTickets = [
+            {
+                id: "BUG-2026-SNP-03",
+                module: "Printer Thermal ESC/POS",
+                title: "Printer thermal kasir Senopati lambat respon saat cetak resi QRIS",
+                description: "Setelah transaksi QRIS berhasil, tombol cetak resi membutuhkan delay sekitar 8-12 detik sebelum mesin melepaskan kertas.",
+                urgency: "Sedang",
+                status: "Diproses Dev",
+                device: "Printer Resi Thermal Bluetooth",
+                devAssigned: "Rian (Lead Backend & IoT)",
+                devNotes: "Sedang perbaikan timeout handshake driver bluetooth ESC/POS versi 3.02.",
+                time: "15 Okt 2026, 09:15 WIB"
+            },
+            {
+                id: "BUG-2026-SNP-02",
+                module: "Presensi & Absensi Fingerprint",
+                title: "Jam masuk shift pagi Sarah Amelia sempat gagal sync ke server",
+                description: "Check-in pukul 06:48 WIB tercatat di mesin lokal namun indikator cloud menunjukkan pending sync selama 10 menit.",
+                urgency: "Rendah",
+                status: "Selesai / Resolved",
+                device: "Mesin Fingerprint Entrance",
+                devAssigned: "Eka (Network Engineer)",
+                devNotes: "Koneksi IP Gateway outlet telah di-reset. Data presensi terverifikasi lengkap.",
+                time: "12 Okt 2026, 07:30 WIB"
+            },
+            {
+                id: "BUG-2026-SNP-01",
+                module: "Stok & Opname Bahan Baku",
+                title: "Perhitungan sisa stok Fresh Milk di dashboard tidak otomatis terpotong desimal",
+                description: "Opname sisa 3.5 Liter terbulatkan otomatis menjadi 3 Liter di tampilan summary ringkasan.",
+                urgency: "Sedang",
+                status: "Selesai / Resolved",
+                devAssigned: "Eka (Frontend Dev)",
+                devNotes: "Patch format desimal parseFloat telah diperbarui ke v3.0.1.",
+                time: "08 Okt 2026, 14:20 WIB"
+            }
+        ];
+
+        let audioMuted = false;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playAudio(type = 'click') {
+            if (audioMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.04);
+                } else if (type === 'success') {
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.08);
+                    osc.frequency.setValueAtTime(783.99, now + 0.16);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(now + 0.35);
+                }
+            } catch (e) { console.log("Audio note"); }
+        }
+
+        function toggleAudioMute() {
+            audioMuted = !audioMuted;
+            const icon = document.getElementById('audioIcon');
+            if (audioMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-300';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-200';
+                playAudio('click');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            let bgStyle = 'bg-maroon-vintage text-amber-100 border-maroon-700';
+            let icon = 'fa-circle-info text-amber-300';
+            
+            if(type === 'success') { bgStyle = 'bg-emerald-900 text-emerald-100 border-emerald-700'; icon = 'fa-circle-check text-emerald-400'; playAudio('success'); }
+            if(type === 'warning') { bgStyle = 'bg-amber-900 text-amber-100 border-amber-700'; icon = 'fa-triangle-exclamation text-amber-300'; }
+
+            toast.className = `flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-lg text-xs font-semibold ${bgStyle} transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function updateSummaryCounters() {
+            const total = senopatiBugTickets.length;
+            const inProgress = senopatiBugTickets.filter(b => b.status === 'Diproses Dev').length;
+            const resolved = senopatiBugTickets.filter(b => b.status === 'Selesai / Resolved').length;
+
+            document.getElementById('statTotalTickets').innerText = `${total} Tiket`;
+            document.getElementById('statInProgressTickets').innerText = `${inProgress} Kendala`;
+            document.getElementById('statResolvedTickets').innerText = `${resolved} Selesai`;
+        }
+
+        function renderBugTickets() {
+            const container = document.getElementById('bugTicketsContainer');
+            container.innerHTML = '';
+
+            const filterStatus = document.getElementById('filterBugStatus').value;
+            let filtered = senopatiBugTickets;
+
+            if (filterStatus !== 'all') {
+                filtered = filtered.filter(b => b.status === filterStatus);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-gray-400 italic text-xs"><i class="fa-solid fa-folder-open text-2xl block mb-2 opacity-50"></i>Tidak ada tiket kendala dalam kategori ini.</div>`;
+                return;
+            }
+
+            filtered.forEach(ticket => {
+                let statusBadge = "bg-yellow-100 text-yellow-800 border-yellow-200";
+                let statusIcon = "fa-clock";
+                
+                if (ticket.status === 'Diproses Dev') { 
+                    statusBadge = "bg-amber-100 text-amber-900 border-amber-300 animate-pulse"; 
+                    statusIcon = "fa-spinner fa-spin"; 
+                } else if (ticket.status === 'Selesai / Resolved') { 
+                    statusBadge = "bg-emerald-100 text-emerald-800 border-emerald-300"; 
+                    statusIcon = "fa-circle-check"; 
+                }
+
+                let urgencyBadge = "bg-gray-100 text-gray-700";
+                if (ticket.urgency === 'Critical') urgencyBadge = "bg-red-100 text-red-800 font-bold border border-red-200";
+                if (ticket.urgency === 'Sedang') urgencyBadge = "bg-amber-50 text-amber-800 font-semibold border border-amber-200";
+
+                const card = `
+                    <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:border-maroon-300 transition-all space-y-2.5 shadow-sm">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-extrabold text-xs text-maroon-700 font-mono">${ticket.id}</span>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-gray-200/80 text-gray-700">${ticket.module}</span>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] ${urgencyBadge}">${ticket.urgency}</span>
+                                </div>
+                                <h5 class="font-bold text-gray-900 text-xs mt-1.5">${ticket.title}</h5>
+                            </div>
+                            <span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusBadge} whitespace-nowrap">
+                                <i class="fa-solid ${statusIcon}"></i>
+                                <span>${ticket.status}</span>
+                            </span>
+                        </div>
+
+                        <p class="text-xs text-gray-600 bg-white p-2.5 rounded-xl border border-gray-100 leading-relaxed">${ticket.description}</p>
+
+                        <div class="pt-2 border-t border-gray-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 text-[11px]">
+                            <span class="text-gray-500 font-medium"><i class="fa-solid fa-user-gear mr-1 text-maroon-700"></i> Dev Assigned: <strong class="text-gray-800">${ticket.devAssigned}</strong></span>
+                            <span class="text-gray-400"><i class="fa-solid fa-calendar-day mr-1"></i> ${ticket.time}</span>
+                        </div>
+
+                        ${ticket.devNotes ? `
+                            <div class="mt-2 p-2.5 bg-amber-50/80 rounded-xl border border-amber-200/70 text-[11px] text-amber-900 flex items-start space-x-2">
+                                <i class="fa-solid fa-code text-maroon-700 mt-0.5"></i>
+                                <div><strong class="font-bold">Catatan Developer IT:</strong> ${ticket.devNotes}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+
+            updateSummaryCounters();
+        }
+
+        function previewFileName(input) {
+            const previewSpan = document.getElementById('fileNamePreview');
+            if (input.files && input.files[0]) {
+                previewSpan.innerText = `File terlampir: ${input.files[0].name}`;
+                previewSpan.classList.add('text-maroon-700', 'font-bold');
+            } else {
+                previewSpan.innerText = "Klik untuk mengunggah screenshot (PNG, JPG)";
+                previewSpan.classList.remove('text-maroon-700', 'font-bold');
+            }
+        }
+
+        function submitBugReport(e) {
+            e.preventDefault();
+            const module = document.getElementById('bugModule').value;
+            const urgency = document.getElementById('bugUrgency').value;
+            const device = document.getElementById('bugDevice').value;
+            const title = document.getElementById('bugTitle').value;
+            const description = document.getElementById('bugDescription').value;
+
+            const newTicket = {
+                id: 'BUG-2026-SNP-0' + (senopatiBugTickets.length + 1),
+                module,
+                title,
+                description,
+                urgency,
+                status: 'Menunggu Review',
+                device,
+                devAssigned: 'Tim Developer IT (Pending)',
+                devNotes: 'Laporan baru diterima dari Kepala Cabang Senopati. Menunggu penugasan tim engineer.',
+                time: 'Baru Saja'
+            };
+
+            senopatiBugTickets.unshift(newTicket);
+            renderBugTickets();
+
+            // Reset form
+            document.getElementById('bugTitle').value = '';
+            document.getElementById('bugDescription').value = '';
+            document.getElementById('bugFileInput').value = '';
+            document.getElementById('fileNamePreview').innerText = "Klik untuk mengunggah screenshot (PNG, JPG)";
+            document.getElementById('fileNamePreview').classList.remove('text-maroon-700', 'font-bold');
+
+            showToast(`Laporan kendala #${newTicket.id} dikirim ke Tim Developer IT!`, 'success');
+        }
+
+        window.onload = function() {
+            renderBugTickets();
+        };
+    </script>
+</body>
+</html>

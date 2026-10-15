@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffe Club'RS - Stok & Bahan Baku Kepala Cabang</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        maroon: {
+                            50: '#fdf2f4',
+                            100: '#fbe5e8',
+                            200: '#f7ced5',
+                            500: '#c22947',
+                            600: '#a31d36',
+                            700: '#801328',
+                            800: '#5c0b1b',
+                            900: '#3e040f',
+                            vintage: '#4A0E17',
+                            deep: '#36080F',
+                            accent: '#6B1426',
+                            hover: '#5A101E'
+                        },
+                        creamBg: '#F8F6F2',
+                        cardBg: '#FFFFFF',
+                        darkSidebar: '#1B1315'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F4F1EA;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1B1315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4A0E17;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #801328;
+        }
+
+        .glow-card {
+            box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(74, 14, 23, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 25px 2px rgba(107, 20, 38, 0.35);
+        }
+    </style>
+</head>
+<body class="bg-creamBg text-gray-800 min-h-screen flex flex-col md:flex-row antialiased relative">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="w-full md:w-64 bg-darkSidebar text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-30 min-h-screen border-r border-maroon-900/40">
+        <div>
+            <!-- Header Brand Sidebar -->
+            <div class="p-5 border-b border-white/10 bg-gradient-to-b from-maroon-deep to-darkSidebar">
+                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
+                    <i class="fa-solid fa-mug-hot text-amber-400"></i> Coffe Club'RS
+                </h1>
+                <p class="text-[10px] text-amber-200/70 font-semibold tracking-widest uppercase mt-0.5">
+                    Branch Manager System
+                </p>
+            </div>
+
+            <!-- Active Scope Indicator -->
+            <div class="px-5 py-3 bg-maroon-vintage/40 border-b border-white/5 flex items-center justify-between text-xs">
+                <span id="sidebarScopeText" class="text-amber-200/90 font-semibold flex items-center">
+                    <i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang Senopati
+                </span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            </div>
+
+            <!-- Menu Navigation Links -->
+            <nav class="p-3 space-y-1 text-sm font-medium">
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 px-3 pt-3 pb-1 font-bold">
+                    Operasional Outlet
+                </div>
+
+                <a href="dashboard.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-chart-line text-gray-400 text-base"></i>
+                    <span>Dashboard Outlet</span>
+                </a>
+
+                <a href="stock-dan-bahan-baku.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30 ambient-glow">
+                    <i class="fa-solid fa-boxes-stacked text-amber-300 text-base"></i>
+                    <span>Stok & Bahan Baku</span>
+                </a>
+
+                <a href="jadwal-absensi-staf.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-id-card-clip text-gray-400 text-base"></i>
+                    <span>Jadwal & Absensi Staf</span>
+                </a>
+
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 px-3 pt-4 pb-1 font-bold">
+                    Pelaporan
+                </div>
+
+                <a href="laporan-penjualan.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-file-invoice-dollar text-gray-400 text-base"></i>
+                    <span>Laporan Penjualan</span>
+                </a>
+
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 px-3 pt-4 pb-1 font-bold">
+                    Bantuan & IT
+                </div>
+
+                <a href="lapor-bug.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/5 hover:text-amber-100 transition-colors">
+                    <i class="fa-solid fa-bug text-gray-400 text-base"></i>
+                    <span>Lapor Bug / Kendala</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Footer -->
+        <div class="p-4 border-t border-white/10 text-xs text-gray-400 bg-black/20 space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="flex items-center text-emerald-400 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span> Shift Aktif: Pagi
+                </span>
+                <span class="text-[10px] font-mono text-gray-500">v3.0</span>
+            </div>
+            <p class="text-[10px] text-gray-500 text-center">© 2026 Coffe Club'RS System</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        
+        <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
+            <div>
+                <p class="text-xs md:text-sm font-semibold text-amber-200/90 flex items-center gap-2">
+                    <i class="fa-solid fa-user-tie text-amber-400"></i> Panel Kerja Kepala Cabang — Coffe Club'RS
+                </p>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleAudioMute()" id="audioToggleBtn" class="p-2 rounded-xl bg-maroon-800/80 hover:bg-maroon-700 text-amber-200 border border-maroon-600/40 text-xs transition-all" title="Aktifkan/Matikan Suara">
+                    <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+                </button>
+
+                <!-- Verified Session Badge -->
+                <span class="px-3 py-1 bg-amber-400/20 text-amber-200 border border-amber-400/30 rounded-xl text-xs font-bold tracking-wider uppercase flex items-center space-x-1.5 shadow-sm">
+                    <i class="fa-solid fa-shield-check text-emerald-400"></i>
+                    <span>Cabang Senopati</span>
+                </span>
+                
+                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                    <span>Keluar</span>
+                    <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                </a>
+            </div>
+        </header>
+
+        <main class="p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
+            
+            <!-- Banner Control Bar -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 glow-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
+                            BAR INVENTORY
+                        </span>
+                        <h3 class="text-base md:text-lg font-bold text-gray-900">
+                            Inventaris Bahan Baku & Stok Bar
+                        </h3>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Pengawasan langsung persediaan bahan cair, biji kopi, syrup, pastry, dan kemasan fisik Cabang Senopati.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <button onclick="openStockOpnameModal()" class="inline-flex items-center space-x-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm">
+                        <i class="fa-solid fa-clipboard-check text-amber-600"></i>
+                        <span>Stock Opname Cepat</span>
+                    </button>
+
+                    <button onclick="openRestockModal()" class="inline-flex items-center space-x-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md border border-maroon-700">
+                        <i class="fa-solid fa-plus text-amber-300"></i>
+                        <span>Pengajuan Restock ke Warehouse</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Stats Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                
+                <!-- Total Bahan SKU -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80 glow-card relative overflow-hidden flex flex-col justify-between border-l-[6px] border-l-maroon-800">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                                Total SKU Bahan
+                            </span>
+                            <h4 id="statTotalSKU" class="text-2xl font-black text-gray-900 tracking-tight">
+                                8 Bahan Baku
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg border border-maroon-100">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-400 mt-3 font-medium">
+                        Aktif dalam menu bar outlet
+                    </p>
+                </div>
+
+                <!-- Stok Kritis (Hero Alert) -->
+                <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between glow-card">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-amber-300/90 uppercase tracking-wider block mb-1">
+                                Stok Kritis (Restock Urgent)
+                            </span>
+                            <h4 id="statKritisCount" class="text-2xl font-black text-amber-50 tracking-tight">
+                                2 Bahan Baku
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 flex items-center justify-center text-lg animate-pulse">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <p id="statKritisSub" class="text-[11px] text-amber-200/80 mt-3 font-medium truncate">
+                        Fresh Milk & Paper Cup Cold 16oz
+                    </p>
+                </div>
+
+                <!-- Pengajuan Restock Pending -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80 glow-card relative overflow-hidden flex flex-col justify-between border-l-[6px] border-l-amber-500">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                                Status Pengajuan Restock
+                            </span>
+                            <h4 id="statRestockPending" class="text-2xl font-black text-amber-700 tracking-tight">
+                                1 Pengiriman
+                            </h4>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg border border-amber-100">
+                            <i class="fa-solid fa-truck-ramp-box"></i>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-amber-800/80 mt-3 font-medium">
+                        Estimasi tiba: Hari ini 14:00 WIB
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Main Stock Table Area -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 glow-card overflow-hidden">
+                
+                <!-- Table Controls Header -->
+                <div class="p-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50">
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">
+                            Rincian Persediaan Stok Bahan Baku Bar
+                        </h4>
+                        <p class="text-xs text-gray-500">
+                            Pantau jumlah bahan fisik dan lakukan penyesuaian opname secara berkala.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                            <input type="text" id="searchInput" onkeyup="filterStockTable()" placeholder="Cari bahan, SKU, kategori..." class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 focus:outline-none">
+                        </div>
+
+                        <select id="filterCategory" onchange="filterStockTable()" class="w-full sm:w-auto px-3 py-2 text-xs bg-white border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 font-semibold text-gray-700 focus:outline-none cursor-pointer">
+                            <option value="all">Semua Kategori</option>
+                            <option value="Biji Kopi">Biji Kopi</option>
+                            <option value="Cairan & Dairy">Cairan & Dairy</option>
+                            <option value="Sirup & Perasa">Sirup & Perasa</option>
+                            <option value="Kemasan & Cup">Kemasan & Cup</option>
+                            <option value="Pastry & Makanan">Pastry & Makanan</option>
+                        </select>
+
+                        <select id="filterStatus" onchange="filterStockTable()" class="w-full sm:w-auto px-3 py-2 text-xs bg-white border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 font-semibold text-gray-700 focus:outline-none cursor-pointer">
+                            <option value="all">Semua Status</option>
+                            <option value="Aman">Aman</option>
+                            <option value="Menipis">Menipis</option>
+                            <option value="Kritis">Kritis</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stock Data Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-700">
+                        <thead class="bg-maroon-deep text-amber-100 uppercase text-[10px] tracking-wider font-bold">
+                            <tr>
+                                <th class="px-5 py-3.5 whitespace-nowrap">Kode SKU</th>
+                                <th class="px-5 py-3.5 whitespace-nowrap">Nama Bahan Baku</th>
+                                <th class="px-5 py-3.5 whitespace-nowrap">Kategori</th>
+                                <th class="px-5 py-3.5 text-center whitespace-nowrap">Stok Fisik Saat Ini</th>
+                                <th class="px-5 py-3.5 text-center whitespace-nowrap">Min. Stok Aman</th>
+                                <th class="px-5 py-3.5 text-center whitespace-nowrap">Status Stok</th>
+                                <th class="px-5 py-3.5 text-center whitespace-nowrap">Aksi Management</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody" class="divide-y divide-gray-200">
+                            <!-- Rows dynamically populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal Pengajuan Restock Ke Warehouse -->
+    <div id="restockModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-gray-300 space-y-4">
+            <button onclick="closeRestockModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="border-b border-gray-100 pb-3 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg font-bold border border-maroon-200">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-gray-900">Form Pengajuan Restock Bahan</h3>
+                    <p class="text-xs text-gray-500">Minta pengiriman bahan baku baru dari Warehouse Utama</p>
+                </div>
+            </div>
+
+            <form onsubmit="submitRestockRequest(event)" class="space-y-3.5 text-xs">
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Pilih Bahan Baku</label>
+                    <select id="restockItemSelect" required class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                        <option value="Fresh Milk Pasteurisasi (1L)">Fresh Milk Pasteurisasi (Kemasan 1 Liter)</option>
+                        <option value="Paper Cup Cold 16oz (Pack 50s)">Paper Cup Cold 16oz (Pack 50 pcs)</option>
+                        <option value="Biji Kopi Houseblend Espresso (1kg)">Biji Kopi Houseblend Espresso (Bag 1 kg)</option>
+                        <option value="Sirup Aren Organic (1L)">Sirup Aren Organic (Botol 1 Liter)</option>
+                        <option value="Croissant Frozen (Box 20s)">Croissant Frozen (Box 20 pcs)</option>
+                        <option value="Uji Matcha Powder (500g)">Uji Matcha Powder (Pack 500g)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Jumlah Dibutuhkan</label>
+                        <input type="number" id="restockQty" min="1" value="10" required class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Tingkat Urgensi</label>
+                        <select id="restockUrgency" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                            <option value="Mendesak (Hari Ini)">Mendesak (Kirim Hari Ini)</option>
+                            <option value="Normal (Jadwal Esok)" selected>Normal (Jadwal Rutin Esok)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Catatan Tambahan Untuk Warehouse</label>
+                    <textarea id="restockNotes" rows="2" placeholder="Contoh: Kirim sebelum jam 14:00 WIB untuk lonjakan pesanan shift sore" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800"></textarea>
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeRestockModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">Batal</button>
+                    <button type="submit" class="w-full py-2.5 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 font-bold rounded-xl transition-colors shadow-md flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-paper-plane text-amber-300"></i>
+                        <span>Kirim Form Restock</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Stock Opname Cepat -->
+    <div id="opnameModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-gray-300 space-y-4">
+            <button onclick="closeStockOpnameModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="border-b border-gray-100 pb-3 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center text-lg font-bold border border-amber-200">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-gray-900">Stock Opname / Penyesuaian Fisik</h3>
+                    <p class="text-xs text-gray-500">Perbarui jumlah fisik aktual bahan di bar jika terjadi selisih</p>
+                </div>
+            </div>
+
+            <form onsubmit="submitStockOpname(event)" class="space-y-3.5 text-xs">
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Pilih Bahan Baku</label>
+                    <select id="opnameItemSelect" onchange="syncOpnameCurrentStock()" required class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Stok Di Sistem</label>
+                        <input type="text" id="opnameSystemStock" readonly class="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-xl font-bold text-gray-600">
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Jumlah Fisik Aktual</label>
+                        <input type="number" step="0.1" id="opnameActualStock" required class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-bold text-maroon-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Alasan Penyesuaian / Catatan Opname</label>
+                    <select id="opnameReason" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800 mb-2">
+                        <option value="Susu Tumpah / Spill Bar">Spill / Bahan Rusak Saat Barista On-Duty</option>
+                        <option value="Kalibrasi Espresso Machine">Terpakai Untuk Kalibrasi Grinder / Espresso</option>
+                        <option value="Hasil Opname Rutin">Penyesuaian Opname Rutin Shift Pagi/Sore</option>
+                        <option value="Lainnya">Lainnya (Tuliskan Di Bawah)</option>
+                    </select>
+                    <input type="text" id="opnameNotes" placeholder="Catatan tambahan (Opsional)" class="w-full p-2.5 border border-gray-300 rounded-xl font-medium text-gray-800">
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeStockOpnameModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">Batal</button>
+                    <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-colors shadow-md flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Simpan Hasil Opname</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <script>
+        // Data Stok Khusus Cabang Senopati
+        let senopatiStockData = [
+            { sku: "RM-SNP-001", name: "Biji Kopi Houseblend Espresso", category: "Biji Kopi", stock: 8.5, unit: "kg", minStock: 3.0, status: "Aman" },
+            { sku: "RM-SNP-002", name: "Fresh Milk Pasteurisasi", category: "Cairan & Dairy", stock: 3.0, unit: "Liter", minStock: 8.0, status: "Kritis" },
+            { sku: "RM-SNP-003", name: "Paper Cup Cold 16oz", category: "Kemasan & Cup", stock: 45, unit: "Pcs", minStock: 100, status: "Kritis" },
+            { sku: "RM-SNP-004", name: "Sirup Aren Organic", category: "Sirup & Perasa", stock: 4.0, unit: "Botol", minStock: 2.0, status: "Aman" },
+            { sku: "RM-SNP-005", name: "Croissant Frozen", category: "Pastry & Makanan", stock: 12, unit: "Pcs", minStock: 15, status: "Menipis" },
+            { sku: "RM-SNP-006", name: "Uji Matcha Powder Premium", category: "Sirup & Perasa", stock: 1.2, unit: "kg", minStock: 0.5, status: "Aman" },
+            { sku: "RM-SNP-007", name: "Caramel Sauce Syrup", category: "Sirup & Perasa", stock: 3.5, unit: "Botol", minStock: 1.5, status: "Aman" },
+            { sku: "RM-SNP-008", name: "Paper Straw Eco 8mm", category: "Kemasan & Cup", stock: 250, unit: "Pcs", minStock: 100, status: "Aman" }
+        ];
+
+        let audioMuted = false;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playAudio(type = 'click') {
+            if (audioMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.04);
+                } else if (type === 'success') {
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.08);
+                    osc.frequency.setValueAtTime(783.99, now + 0.16);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(now + 0.35);
+                }
+            } catch (e) { console.log("Audio note"); }
+        }
+
+        function toggleAudioMute() {
+            audioMuted = !audioMuted;
+            const icon = document.getElementById('audioIcon');
+            if (audioMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-300';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-200';
+                playAudio('click');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            let bgStyle = 'bg-maroon-vintage text-amber-100 border-maroon-700';
+            let icon = 'fa-circle-info text-amber-300';
+            
+            if(type === 'success') { bgStyle = 'bg-emerald-900 text-emerald-100 border-emerald-700'; icon = 'fa-circle-check text-emerald-400'; playAudio('success'); }
+            if(type === 'warning') { bgStyle = 'bg-amber-900 text-amber-100 border-amber-700'; icon = 'fa-triangle-exclamation text-amber-300'; }
+
+            toast.className = `flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-lg text-xs font-semibold ${bgStyle} transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function calculateStockStatus(item) {
+            if (item.stock <= item.minStock * 0.5) return { text: "Kritis", badge: "bg-red-100 text-red-800 border-red-300 font-bold animate-pulse" };
+            if (item.stock <= item.minStock) return { text: "Menipis", badge: "bg-amber-100 text-amber-800 border-amber-300 font-bold" };
+            return { text: "Aman", badge: "bg-emerald-50 text-emerald-700 border-emerald-200 font-bold" };
+        }
+
+        function updateSummaryCards() {
+            const kritisItems = senopatiStockData.filter(i => calculateStockStatus(i).text === "Kritis");
+            document.getElementById('statTotalSKU').innerText = `${senopatiStockData.length} Bahan Baku`;
+            document.getElementById('statKritisCount').innerText = `${kritisItems.length} Bahan Baku`;
+
+            if(kritisItems.length > 0) {
+                document.getElementById('statKritisSub').innerText = kritisItems.map(i => i.name).join(' & ');
+            } else {
+                document.getElementById('statKritisSub').innerText = "Semua persediaan bahan aman";
+            }
+        }
+
+        function renderStockTable(data) {
+            const tbody = document.getElementById('stockTableBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-400 italic">Tidak ada bahan baku yang cocok.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const statusInfo = calculateStockStatus(item);
+
+                const row = `
+                    <tr class="hover:bg-amber-50/30 transition-colors">
+                        <td class="px-5 py-3.5 font-mono font-bold text-gray-900 whitespace-nowrap">${item.sku}</td>
+                        <td class="px-5 py-3.5 font-bold text-gray-900 whitespace-nowrap">${item.name}</td>
+                        <td class="px-5 py-3.5 text-gray-600 font-semibold whitespace-nowrap">${item.category}</td>
+                        <td class="px-5 py-3.5 text-center font-black text-sm text-gray-900 whitespace-nowrap">${item.stock} <span class="text-xs text-gray-500 font-medium">${item.unit}</span></td>
+                        <td class="px-5 py-3.5 text-center font-medium text-gray-500 whitespace-nowrap">${item.minStock} ${item.unit}</td>
+                        <td class="px-5 py-3.5 text-center whitespace-nowrap">
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] border ${statusInfo.badge}">${statusInfo.text}</span>
+                        </td>
+                        <td class="px-5 py-3.5 text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center space-x-1.5">
+                                <button onclick="openStockOpnameModalFor('${item.sku}')" class="px-2.5 py-1 text-[10px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 transition-all">
+                                    <i class="fa-solid fa-pen-to-square mr-1"></i>Opname
+                                </button>
+                                <button onclick="openRestockFor('${item.name}')" class="px-2.5 py-1 text-[10px] font-bold text-maroon-700 hover:bg-maroon-vintage hover:text-amber-100 rounded-lg border border-maroon-200 transition-all">
+                                    <i class="fa-solid fa-truck-ramp-box mr-1"></i>Restock
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            updateSummaryCards();
+        }
+
+        function filterStockTable() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const categoryValue = document.getElementById('filterCategory').value;
+            const statusValue = document.getElementById('filterStatus').value;
+
+            let filtered = senopatiStockData;
+
+            if (categoryValue !== 'all') {
+                filtered = filtered.filter(i => i.category === categoryValue);
+            }
+
+            if (statusValue !== 'all') {
+                filtered = filtered.filter(i => calculateStockStatus(i).text === statusValue);
+            }
+
+            if (searchValue.trim() !== '') {
+                filtered = filtered.filter(i => 
+                    i.name.toLowerCase().includes(searchValue) ||
+                    i.sku.toLowerCase().includes(searchValue) ||
+                    i.category.toLowerCase().includes(searchValue)
+                );
+            }
+
+            renderStockTable(filtered);
+        }
+
+        function openRestockModal() {
+            playAudio('click');
+            document.getElementById('restockModal').classList.remove('hidden');
+        }
+
+        function closeRestockModal() {
+            playAudio('click');
+            document.getElementById('restockModal').classList.add('hidden');
+        }
+
+        function openRestockFor(itemName) {
+            openRestockModal();
+            const select = document.getElementById('restockItemSelect');
+            if (select) {
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].text.toLowerCase().includes(itemName.toLowerCase().substring(0, 6))) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        function submitRestockRequest(e) {
+            e.preventDefault();
+            const item = document.getElementById('restockItemSelect').value;
+            const qty = document.getElementById('restockQty').value;
+            closeRestockModal();
+            showToast(`Pengajuan restock ${qty} unit ${item} terkirim ke Warehouse!`, 'success');
+        }
+
+        function populateOpnameSelect() {
+            const select = document.getElementById('opnameItemSelect');
+            select.innerHTML = '';
+            senopatiStockData.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.sku;
+                opt.text = `${item.name} (${item.sku})`;
+                select.appendChild(opt);
+            });
+            syncOpnameCurrentStock();
+        }
+
+        function syncOpnameCurrentStock() {
+            const sku = document.getElementById('opnameItemSelect').value;
+            const item = senopatiStockData.find(i => i.sku === sku);
+            if (item) {
+                document.getElementById('opnameSystemStock').value = `${item.stock} ${item.unit}`;
+                document.getElementById('opnameActualStock').value = item.stock;
+            }
+        }
+
+        function openStockOpnameModal() {
+            playAudio('click');
+            populateOpnameSelect();
+            document.getElementById('opnameModal').classList.remove('hidden');
+        }
+
+        function openStockOpnameModalFor(sku) {
+            openStockOpnameModal();
+            document.getElementById('opnameItemSelect').value = sku;
+            syncOpnameCurrentStock();
+        }
+
+        function closeStockOpnameModal() {
+            playAudio('click');
+            document.getElementById('opnameModal').classList.add('hidden');
+        }
+
+        function submitStockOpname(e) {
+            e.preventDefault();
+            const sku = document.getElementById('opnameItemSelect').value;
+            const actualVal = parseFloat(document.getElementById('opnameActualStock').value);
+
+            const item = senopatiStockData.find(i => i.sku === sku);
+            if (item) {
+                const oldStock = item.stock;
+                item.stock = actualVal;
+                item.status = calculateStockStatus(item).text;
+                
+                filterStockTable();
+                closeStockOpnameModal();
+                showToast(`Stok ${item.name} disesuaikan dari ${oldStock} menjadi ${actualVal} ${item.unit}!`, 'success');
+            }
+        }
+
+        window.onload = function() {
+            renderStockTable(senopatiStockData);
+        };
+    </script>
+</body>
+</html>
