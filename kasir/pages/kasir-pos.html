@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Script Route Guard dijalankan paling awal -->
+    <script src="../../js/route-guard.js"></script>
     <title>Coffe Club'RS - Terminal POS Kasir</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    
     
     <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,7 +74,6 @@
             background: #801328;
         }
 
-        /* Glassmorphism & Immersive Glow Effects */
         .glow-card {
             box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -83,7 +87,6 @@
             box-shadow: 0 0 25px 2px rgba(107, 20, 38, 0.35);
         }
 
-        /* Thermal Receipt Feed Animation */
         @keyframes printFeed {
             0% { transform: translateY(-20px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
@@ -146,7 +149,7 @@
         <!-- Sidebar Bottom Footer -->
         <div class="p-4 border-t border-white/10 text-xs text-gray-400 bg-black/20 space-y-2">
             <div class="flex items-center justify-between">
-                <span class="flex items-center text-amber-300 font-medium text-[11px]">
+                <span id="sidebarUserName" class="flex items-center text-amber-300 font-medium text-[11px]">
                     <i class="fa-solid fa-user-check mr-1.5 text-emerald-400"></i> Sarah Amelia
                 </span>
                 <span class="text-[10px] font-mono text-gray-500">Kasir Shift 1</span>
@@ -161,7 +164,7 @@
         <!-- Top Navigation Bar -->
         <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
             <div>
-                <p class="text-xs text-amber-200/90 font-semibold flex items-center gap-2">
+                <p id="topBarBranchText" class="text-xs text-amber-200/90 font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-store text-amber-400"></i> Terminal Kasir POS — Cabang Senopati
                 </p>
             </div>
@@ -180,10 +183,11 @@
                     KASIR
                 </span>
                 
-                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                <!-- Tombol Keluar Logout -->
+                <button onclick="handleLogout()" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm cursor-pointer">
                     <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
-                </a>
+                </button>
             </div>
         </header>
 
@@ -200,7 +204,7 @@
                         <input type="text" id="searchMenuInput" onkeyup="filterMenuCatalog()" placeholder="Cari nama menu kopi, pastry, makanan..." class="w-full pl-10 pr-4 py-2.5 text-xs bg-gray-50 border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 focus:outline-none font-medium text-gray-800">
                     </div>
 
-                    <!-- Category Navigation (Flex Wrap, Tanpa Slide & Warna Tema Konsisten) -->
+                    <!-- Category Navigation -->
                     <div class="flex flex-wrap gap-2 text-xs font-bold">
                         <button onclick="selectCategory('all', this)" class="cat-pill active px-3.5 py-2 rounded-xl bg-maroon-vintage text-amber-100 shadow-sm border border-maroon-700 transition-all flex items-center justify-center">
                             <i class="fa-solid fa-utensils mr-1.5 text-amber-300 cat-icon"></i>Semua Menu
@@ -240,7 +244,7 @@
                                 <h4 class="font-black text-gray-900 text-sm leading-tight">Pesanan Pelanggan</h4>
                                 <div class="mt-0.5">
                                     <span class="text-[10px] text-gray-500">Struk No: </span>
-                                    <span id="currentStrukNo" class="text-[11px] font-bold text-maroon-700 font-mono">CC-2610-010</span>
+                                    <span id="currentStrukNo" class="text-[11px] font-bold text-maroon-700 font-mono">--</span>
                                 </div>
                             </div>
                         </div>
@@ -271,7 +275,7 @@
                     <!-- Dynamic Cart Items Generated by JS -->
                 </div>
 
-                <!-- DIRECT PAYMENT PANEL (Langsung Terintegrasi di Sisi Kanan) -->
+                <!-- DIRECT PAYMENT PANEL -->
                 <div class="p-4 border-t border-gray-200 bg-gray-50/90 space-y-3">
                     
                     <!-- Calculation Breakdown -->
@@ -290,21 +294,17 @@
                         </div>
                     </div>
 
-                    <!-- Metode Pembayaran Inline Tabs -->
+                    <!-- Metode Pembayaran Inline Tabs (Hanya Cash & QRIS) -->
                     <div class="space-y-2">
                         <label class="text-[10px] font-black uppercase text-gray-600 tracking-wider block">Pilih Metode Pembayaran:</label>
-                        <div class="grid grid-cols-3 gap-1.5 text-[11px] font-bold">
-                            <button onclick="switchPaymentMethod('Cash')" id="payTabCash" class="pay-tab py-2 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                        <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
+                            <button onclick="switchPaymentMethod('Cash')" id="payTabCash" class="pay-tab py-2.5 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all">
                                 <i class="fa-solid fa-money-bill-wave text-xs"></i>
                                 <span>Tunai</span>
                             </button>
-                            <button onclick="switchPaymentMethod('QRIS')" id="payTabQRIS" class="pay-tab py-2 rounded-xl bg-white text-gray-700 hover:bg-gray-100 border border-gray-300 flex items-center justify-center gap-1.5 transition-all">
+                            <button onclick="switchPaymentMethod('QRIS')" id="payTabQRIS" class="pay-tab py-2.5 rounded-xl bg-white text-gray-700 hover:bg-gray-100 border border-gray-300 flex items-center justify-center gap-1.5 transition-all">
                                 <i class="fa-solid fa-qrcode text-xs text-maroon-700"></i>
                                 <span>QRIS</span>
-                            </button>
-                            <button onclick="switchPaymentMethod('Debit')" id="payTabDebit" class="pay-tab py-2 rounded-xl bg-white text-gray-700 hover:bg-gray-100 border border-gray-300 flex items-center justify-center gap-1.5 transition-all">
-                                <i class="fa-solid fa-credit-card text-xs text-maroon-700"></i>
-                                <span>Debit</span>
                             </button>
                         </div>
                     </div>
@@ -322,7 +322,6 @@
                             </div>
                         </div>
 
-                        <!-- Quick Nominal Buttons -->
                         <div class="grid grid-cols-3 gap-1.5">
                             <button onclick="setQuickCash('exact')" class="py-1.5 bg-white hover:bg-gray-100 active:bg-gray-200 text-gray-800 font-bold rounded-lg border border-gray-300 text-[10px] transition-colors shadow-sm">Uang Pas</button>
                             <button onclick="setQuickCash(50000)" class="py-1.5 bg-white hover:bg-gray-100 active:bg-gray-200 text-gray-800 font-bold rounded-lg border border-gray-300 text-[10px] transition-colors shadow-sm">Rp 50.000</button>
@@ -340,24 +339,6 @@
                                 <p class="font-bold text-gray-800 text-xs">Scan QRIS Kasir</p>
                                 <p class="text-[10px] text-gray-500">GoPay, OVO, ShopeePay, Dana & BCA</p>
                                 <span class="inline-block mt-0.5 text-[9px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>Siap Scan</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Direct Form: DEBIT -->
-                    <div id="payFormDebit" class="pay-form hidden space-y-2 text-xs">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="font-bold text-gray-700 block mb-0.5 text-[10px]">Mesin EDC</label>
-                                <select class="w-full p-2 border border-gray-300 rounded-xl font-semibold text-gray-800 text-xs focus:ring-maroon-700">
-                                    <option value="BCA">EDC BCA</option>
-                                    <option value="Mandiri">EDC Mandiri</option>
-                                    <option value="BRI">EDC BRI</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="font-bold text-gray-700 block mb-0.5 text-[10px]">Approval Code</label>
-                                <input type="text" id="debitRefInput" placeholder="Contoh: 884201" class="w-full p-2 border border-gray-300 rounded-xl font-medium text-gray-800 text-xs focus:ring-maroon-700">
                             </div>
                         </div>
                     </div>
@@ -393,9 +374,9 @@
 
             <!-- Receipt Meta -->
             <div class="text-xs text-gray-600 space-y-1 border-b border-dashed border-gray-300 pb-3">
-                <div class="flex justify-between"><span class="text-gray-400">No. Struk:</span><span id="modalStrukNo" class="font-bold text-gray-800">CC-2610-010</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">No. Struk:</span><span id="modalStrukNo" class="font-bold text-gray-800">--</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Tipe / Meja:</span><span id="modalStrukMeta" class="font-medium text-gray-800">Dine-In</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Kasir:</span><span class="font-medium">Sarah Amelia</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Kasir:</span><span id="modalStrukKasir" class="font-medium">Sarah Amelia</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Metode Bayar:</span><span id="modalStrukMethod" class="font-bold text-maroon-700">Tunai</span></div>
             </div>
 
@@ -426,13 +407,68 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script>
+        // ==========================================
+        // 1. SUPABASE CLIENT & SESSION CONFIG
+        // ==========================================
+        const SUPABASE_URL = 'https://vkyqddubwyabbbeegqlj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const userSession = JSON.parse(localStorage.getItem('user_session')) || {
+            nama: 'Petugas Kasir',
+            cabang: 'Senopati'
+        };
+
         let audioMuted = false;
         let audioCtx = null;
+        let activeCategory = 'all';
+        let cart = [];
+        let selectedPaymentMethod = 'Cash';
+        let menuProducts = [];
+
+        // Generator Nomor Struk Otomatis Unik Real-time
+        function generateStrukNo() {
+            const now = new Date();
+            const dateStr = now.getFullYear().toString().slice(-2) + 
+                    String(now.getMonth() + 1).padStart(2, '0') + 
+                    String(now.getDate()).padStart(2, '0');
+            const timeStr = String(now.getHours()).padStart(2, '0') + 
+                    String(now.getMinutes()).padStart(2, '0') + 
+                    String(now.getSeconds()).padStart(2, '0');
+            const randomNum = Math.floor(10 + Math.random() * 90);
+    
+            return `CC-${dateStr}-${timeStr}-${randomNum}`;
+        }
+
+        function loadUserProfile() {
+            const scopeEls = document.querySelectorAll('#sidebarScopeText');
+            scopeEls.forEach(el => {
+                el.innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang ${userSession.cabang}`;
+            });
+
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) {
+                nameEl.innerHTML = `<i class="fa-solid fa-user-check mr-1.5 text-emerald-400"></i> ${userSession.nama}`;
+            }
+
+            const branchHeader = document.getElementById('topBarBranchText');
+            if (branchHeader) {
+                branchHeader.innerHTML = `<i class="fa-solid fa-store text-amber-400"></i> Terminal Kasir POS — Cabang ${userSession.cabang}`;
+            }
+
+            const modalBranch = document.getElementById('modalBranchName');
+            if (modalBranch) {
+                modalBranch.innerText = `Cabang ${userSession.cabang}`;
+            }
+
+            const modalKasir = document.getElementById('modalStrukKasir');
+            if (modalKasir) {
+                modalKasir.innerText = userSession.nama;
+            }
+        }
 
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             return audioCtx;
         }
 
@@ -507,31 +543,9 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        const menuProducts = [
-            { id: 1, name: "Kopi Susu Coffe Club", category: "kopi", price: 25000, badge: "Best Seller", icon: "fa-mug-hot" },
-            { id: 2, name: "Americano Ice Doppio", category: "kopi", price: 24000, badge: "Favorit", icon: "fa-whiskey-glass" },
-            { id: 3, name: "Caramel Macchiato Oat", category: "kopi", price: 38000, badge: "Premium", icon: "fa-mug-saucer" },
-            { id: 4, name: "Matcha Latte Uji", category: "nonkopi", price: 35000, badge: "Non-Kopi", icon: "fa-leaf" },
-            { id: 5, name: "Choco Belgia Premium", category: "nonkopi", price: 25000, badge: "Manis", icon: "fa-cubes-stacked" },
-            { id: 6, name: "Artisan Butter Croissant", category: "pastry", price: 20000, badge: "Fresh Bake", icon: "fa-bread-slice" },
-            { id: 7, name: "Pain Au Chocolat", category: "pastry", price: 22000, badge: "Popular", icon: "fa-cookie" },
-            { id: 8, name: "Nasi Gila Senopati", category: "makanan", price: 30000, badge: "Spesial", icon: "fa-bowl-rice" },
-            { id: 9, name: "Spaghetti Aglio Olio", category: "makanan", price: 40000, badge: "Hot", icon: "fa-utensils" },
-            { id: 10, name: "French Fries Truffle", category: "makanan", price: 23000, badge: "Snack", icon: "fa-box-tissue" }
-        ];
-
-        let activeCategory = 'all';
-        let cart = [];
-        let selectedPaymentMethod = 'Cash';
-
-        let posHistoryList = [
-            { id: "CC-2610-009", time: "14:15 WIB", method: "QRIS", amount: 146000, items: [{name:"Kopi Susu Coffe Club", qty:4, price:25000}, {name:"French Fries Truffle", qty:2, price:23000}] },
-            { id: "CC-2610-008", time: "13:50 WIB", method: "Cash", amount: 32000, items: [{name:"Caramel Macchiato Oat", qty:1, price:32000}] },
-            { id: "CC-2610-007", time: "13:20 WIB", method: "Debit", amount: 99000, items: [{name:"Americano Ice Doppio", qty:2, price:24000}, {name:"Spaghetti Aglio Olio", qty:1, price:40000}] }
-        ];
-
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
             const toast = document.createElement('div');
             let bgStyle = 'bg-maroon-vintage text-amber-100 border-maroon-700';
             let icon = 'fa-circle-info text-amber-300';
@@ -543,18 +557,67 @@
             toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
             
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
+        // ==========================================
+        // 2. LOAD MENU & STOK READ-ONLY FROM SUPABASE
+        // ==========================================
+        async function loadMenuFromSupabase() {
+            try {
+                // Fetch Menu Master
+                const { data: menuData, error: menuErr } = await supabaseClient.from('menu').select('*');
+                
+                // Fetch Stok Cabang Kasir
+                const { data: stokData } = await supabaseClient
+                    .from('stok_cabang')
+                    .select('*')
+                    .ilike('cabang_id', `%${userSession.cabang}%`);
+
+                const stokMap = {};
+                if (stokData) {
+                    stokData.forEach(s => {
+                        stokMap[s.menu_id] = s.stok;
+                    });
+                }
+
+                if (!menuErr && menuData && menuData.length > 0) {
+                    menuProducts = menuData.map(item => ({
+                        id: item.id,
+                        name: item.nama_menu || item.name,
+                        category: item.kategori || item.category,
+                        price: parseFloat(item.harga || item.price),
+                        badge: item.badge || 'Spesial',
+                        icon: item.icon || 'fa-mug-hot',
+                        stock: stokMap[item.id] !== undefined ? stokMap[item.id] : 50
+                    }));
+                } else {
+                    menuProducts = [
+                        { id: 1, name: "Kopi Susu Coffe Club", category: "kopi", price: 25000, badge: "Best Seller", icon: "fa-mug-hot", stock: stokMap[1] ?? 50 },
+                        { id: 2, name: "Americano Ice Doppio", category: "kopi", price: 24000, badge: "Favorit", icon: "fa-whiskey-glass", stock: stokMap[2] ?? 40 },
+                        { id: 3, name: "Caramel Macchiato Oat", category: "kopi", price: 38000, badge: "Premium", icon: "fa-mug-saucer", stock: stokMap[3] ?? 30 },
+                        { id: 4, name: "Matcha Latte Uji", category: "nonkopi", price: 35000, badge: "Non-Kopi", icon: "fa-leaf", stock: stokMap[4] ?? 25 },
+                        { id: 5, name: "Choco Belgia Premium", category: "nonkopi", price: 25000, badge: "Manis", icon: "fa-cubes-stacked", stock: stokMap[5] ?? 35 },
+                        { id: 6, name: "Artisan Butter Croissant", category: "pastry", price: 20000, badge: "Fresh Bake", icon: "fa-bread-slice", stock: stokMap[6] ?? 20 },
+                        { id: 7, name: "Pain Au Chocolat", category: "pastry", price: 22000, badge: "Popular", icon: "fa-cookie", stock: stokMap[7] ?? 15 },
+                        { id: 8, name: "Nasi Gila Senopati", category: "makanan", price: 30000, badge: "Spesial", icon: "fa-bowl-rice", stock: stokMap[8] ?? 30 },
+                        { id: 9, name: "Spaghetti Aglio Olio", category: "makanan", price: 40000, badge: "Hot", icon: "fa-utensils", stock: stokMap[9] ?? 25 },
+                        { id: 10, name: "French Fries Truffle", category: "makanan", price: 23000, badge: "Snack", icon: "fa-box-tissue", stock: stokMap[10] ?? 40 }
+                    ];
+                }
+                renderCatalog();
+            } catch (err) {
+                console.error("Gagal muat menu & stok:", err);
+            }
+        }
+
         function renderCatalog() {
             const grid = document.getElementById('productGrid');
+            if (!grid) return;
             grid.innerHTML = '';
 
             const searchValue = document.getElementById('searchMenuInput').value.toLowerCase();
@@ -574,23 +637,34 @@
             }
 
             filtered.forEach(p => {
+                const isOutOfStock = p.stock <= 0;
+                const stockColor = isOutOfStock ? 'bg-red-100 text-red-700 border-red-300' : (p.stock <= 10 ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-emerald-50 text-emerald-700 border-emerald-200');
+                const disabledClass = isOutOfStock ? 'opacity-60 cursor-not-allowed grayscale-[30%]' : 'cursor-pointer hover:border-maroon-600 glow-card';
+
                 const card = `
-                    <div onclick="addToCart(${p.id})" class="bg-white p-3.5 rounded-2xl border border-gray-200 hover:border-maroon-600 transition-all cursor-pointer glow-card flex flex-col justify-between group">
+                    <div ${!isOutOfStock ? `onclick="addToCart(${p.id})"` : ''} class="bg-white p-3.5 rounded-2xl border border-gray-200 transition-all flex flex-col justify-between group relative ${disabledClass}">
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
                                     ${p.badge}
                                 </span>
-                                <div class="w-7 h-7 rounded-lg bg-maroon-50 text-maroon-700 group-hover:bg-maroon-vintage group-hover:text-amber-100 transition-colors flex items-center justify-center text-xs">
+                                <div class="w-7 h-7 rounded-lg bg-maroon-50 text-maroon-700 ${!isOutOfStock ? 'group-hover:bg-maroon-vintage group-hover:text-amber-100' : ''} transition-colors flex items-center justify-center text-xs">
                                     <i class="fa-solid ${p.icon}"></i>
                                 </div>
                             </div>
-                            <h5 class="font-bold text-gray-900 text-xs group-hover:text-maroon-700 transition-colors line-clamp-2">${p.name}</h5>
+                            <h5 class="font-bold text-gray-900 text-xs ${!isOutOfStock ? 'group-hover:text-maroon-700' : ''} transition-colors line-clamp-2">${p.name}</h5>
                         </div>
+                        
                         <div class="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between">
-                            <span class="font-black text-gray-900 text-xs">Rp ${p.price.toLocaleString('id-ID')}</span>
-                            <span class="w-6 h-6 rounded-full bg-maroon-vintage text-amber-100 flex items-center justify-center text-[10px] font-bold shadow-sm group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-plus"></i>
+                            <div>
+                                <span class="font-black text-gray-900 text-xs block">Rp ${p.price.toLocaleString('id-ID')}</span>
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded border inline-block mt-0.5 ${stockColor}">
+                                    ${isOutOfStock ? 'HABIS' : `Stok: ${p.stock}`}
+                                </span>
+                            </div>
+                            
+                            <span class="w-6 h-6 rounded-full ${isOutOfStock ? 'bg-gray-300 text-gray-500' : 'bg-maroon-vintage text-amber-100 group-hover:scale-110'} flex items-center justify-center text-[10px] font-bold shadow-sm transition-transform">
+                                <i class="fa-solid ${isOutOfStock ? 'fa-ban' : 'fa-plus'}"></i>
                             </span>
                         </div>
                     </div>
@@ -605,20 +679,9 @@
 
             document.querySelectorAll('.cat-pill').forEach(b => {
                 b.className = 'cat-pill px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all flex items-center justify-center';
-                const icon = b.querySelector('.cat-icon');
-                if (icon) {
-                    icon.classList.remove('text-amber-300');
-                    icon.classList.add('text-maroon-700');
-                }
             });
 
             btn.className = 'cat-pill active px-3.5 py-2 rounded-xl bg-maroon-vintage text-amber-100 shadow-sm border border-maroon-700 transition-all flex items-center justify-center';
-            const activeIcon = btn.querySelector('.cat-icon');
-            if (activeIcon) {
-                activeIcon.classList.remove('text-maroon-700');
-                activeIcon.classList.add('text-amber-300');
-            }
-
             renderCatalog();
         }
 
@@ -627,30 +690,105 @@
         }
 
         function addToCart(productId) {
-            playAudio('click');
             const item = menuProducts.find(p => p.id === productId);
             if (!item) return;
 
+            if (item.stock <= 0) {
+                showToast(`Stok ${item.name} habis!`, 'danger');
+                return;
+            }
+
             const existing = cart.find(c => c.id === productId);
             if (existing) {
+                if (existing.qty + 1 > item.stock) {
+                    showToast(`Batas sisa stok (${item.stock}) tercapai!`, 'danger');
+                    return;
+                }
                 existing.qty += 1;
             } else {
                 cart.push({ ...item, qty: 1 });
             }
 
+            playAudio('click');
             renderCart();
         }
 
         function updateQty(productId, change) {
-            playAudio('click');
             const item = cart.find(c => c.id === productId);
-            if (!item) return;
+            const product = menuProducts.find(p => p.id === productId);
+            if (!item || !product) return;
 
+            if (change > 0 && item.qty + change > product.stock) {
+                showToast(`Batas sisa stok (${product.stock}) tercapai!`, 'danger');
+                return;
+            }
+
+            playAudio('click');
             item.qty += change;
             if (item.qty <= 0) {
                 cart = cart.filter(c => c.id !== productId);
             }
             renderCart();
+        }
+
+        // FUNGSI UNTUK MENGETIK KUALITAS PESANAN SECARA LANGSUNG
+        function manualSetQty(productId, inputVal) {
+            const item = cart.find(c => c.id === productId);
+            const product = menuProducts.find(p => p.id === productId);
+            if (!item || !product) return;
+
+            let parsed = parseInt(inputVal);
+            if (isNaN(parsed) || parsed < 1) {
+                return; // Biarkan kasir mengetik angka
+            }
+
+            if (parsed > product.stock) {
+                showToast(`Batas sisa stok ${product.name} (${product.stock}) tercapai!`, 'danger');
+                parsed = product.stock;
+                const inputEl = document.getElementById(`cart-qty-input-${productId}`);
+                if (inputEl) inputEl.value = parsed;
+            }
+
+            item.qty = parsed;
+            updateCartTotalsOnly();
+        }
+
+        function validateQtyOnBlur(productId, inputEl) {
+            const item = cart.find(c => c.id === productId);
+            const product = menuProducts.find(p => p.id === productId);
+            if (!item || !product) return;
+
+            let parsed = parseInt(inputEl.value);
+            if (isNaN(parsed) || parsed < 1) {
+                parsed = 1;
+            } else if (parsed > product.stock) {
+                parsed = product.stock;
+                showToast(`Batas sisa stok ${product.name} (${product.stock}) tercapai!`, 'danger');
+            }
+
+            item.qty = parsed;
+            renderCart();
+        }
+
+        function updateCartTotalsOnly() {
+            let subtotal = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                subtotal += itemTotal;
+                const totalEl = document.getElementById(`cart-item-total-${item.id}`);
+                if (totalEl) {
+                    totalEl.innerText = `Rp ${itemTotal.toLocaleString('id-ID')}`;
+                }
+            });
+
+            const tax = Math.round(subtotal * 0.10);
+            const total = subtotal + tax;
+
+            document.getElementById('cartSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+            document.getElementById('cartTax').innerText = `Rp ${tax.toLocaleString('id-ID')}`;
+            document.getElementById('cartTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+
+            calculateChange();
         }
 
         function removeFromCart(productId) {
@@ -669,6 +807,7 @@
 
         function renderCart() {
             const container = document.getElementById('cartItemsContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             if (cart.length === 0) {
@@ -689,6 +828,7 @@
             let subtotal = 0;
 
             cart.forEach(item => {
+                const product = menuProducts.find(p => p.id === item.id) || item;
                 const itemTotal = item.price * item.qty;
                 subtotal += itemTotal;
 
@@ -699,7 +839,7 @@
                                 <h6 class="font-bold text-gray-900 text-xs">${item.name}</h6>
                                 <span class="text-[10px] text-gray-500">@ Rp ${item.price.toLocaleString('id-ID')}</span>
                             </div>
-                            <span class="font-extrabold text-xs text-gray-900">Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                            <span id="cart-item-total-${item.id}" class="font-extrabold text-xs text-gray-900">Rp ${itemTotal.toLocaleString('id-ID')}</span>
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -707,10 +847,15 @@
                                 Hapus
                             </button>
 
-                            <div class="flex items-center space-x-2">
-                                <button onclick="updateQty(${item.id}, -1)" class="w-5 h-5 rounded-md bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold flex items-center justify-center">-</button>
-                                <span class="font-black text-xs text-gray-800 w-5 text-center">${item.qty}</span>
-                                <button onclick="updateQty(${item.id}, 1)" class="w-5 h-5 rounded-md bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold flex items-center justify-center">+</button>
+                            <div class="flex items-center space-x-1.5">
+                                <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 rounded-md bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-800 text-xs font-bold flex items-center justify-center transition-colors">-</button>
+                                
+                                <input type="number" id="cart-qty-input-${item.id}" min="1" max="${product.stock}" value="${item.qty}" 
+                                    oninput="manualSetQty(${item.id}, this.value)" 
+                                    onblur="validateQtyOnBlur(${item.id}, this)"
+                                    class="w-12 text-center font-black text-xs border border-gray-300 rounded-lg py-0.5 px-1 focus:ring-maroon-700 focus:border-maroon-700 bg-white shadow-inner [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                
+                                <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 rounded-md bg-maroon-vintage hover:bg-maroon-800 active:bg-maroon-900 text-amber-100 text-xs font-bold flex items-center justify-center transition-colors">+</button>
                             </div>
                         </div>
                     </div>
@@ -733,20 +878,17 @@
             selectedPaymentMethod = method;
 
             document.querySelectorAll('.pay-tab').forEach(t => {
-                t.className = 'pay-tab py-2 rounded-xl bg-white text-gray-700 hover:bg-gray-100 border border-gray-300 flex items-center justify-center gap-1.5 transition-all';
+                t.className = 'pay-tab py-2.5 rounded-xl bg-white text-gray-700 hover:bg-gray-100 border border-gray-300 flex items-center justify-center gap-1.5 transition-all';
             });
 
             document.querySelectorAll('.pay-form').forEach(f => f.classList.add('hidden'));
 
             if (method === 'Cash') {
-                document.getElementById('payTabCash').className = 'pay-tab py-2 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
+                document.getElementById('payTabCash').className = 'pay-tab py-2.5 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
                 document.getElementById('payFormCash').classList.remove('hidden');
             } else if (method === 'QRIS') {
-                document.getElementById('payTabQRIS').className = 'pay-tab py-2 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
+                document.getElementById('payTabQRIS').className = 'pay-tab py-2.5 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
                 document.getElementById('payFormQRIS').classList.remove('hidden');
-            } else if (method === 'Debit') {
-                document.getElementById('payTabDebit').className = 'pay-tab py-2 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
-                document.getElementById('payFormDebit').classList.remove('hidden');
             }
         }
 
@@ -758,6 +900,8 @@
             let change = cashVal - total;
 
             const changeEl = document.getElementById('cashChangeDisplay');
+            if (!changeEl) return;
+
             if (cart.length === 0) {
                 changeEl.innerText = 'Rp 0';
                 changeEl.className = 'font-black text-xs text-emerald-700';
@@ -786,7 +930,10 @@
             calculateChange();
         }
 
-        function confirmPaymentAndPrint() {
+        // ==========================================
+        // 3. PROCESS PAYMENT & DB TRANSACTION INSERTION
+        // ==========================================
+        async function confirmPaymentAndPrint() {
             if (cart.length === 0) {
                 showToast('Pilih menu terlebih dahulu!', 'danger');
                 return;
@@ -804,47 +951,91 @@
                 }
             }
 
-            playAudio('chime');
-
             const currentNo = document.getElementById('currentStrukNo').innerText;
-
-            posHistoryList.unshift({
-                id: currentNo,
-                time: new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) + ' WIB',
-                method: selectedPaymentMethod,
-                amount: total,
-                items: JSON.parse(JSON.stringify(cart))
-            });
-
-            document.getElementById('modalStrukNo').innerText = currentNo;
-            document.getElementById('modalStrukMethod').innerText = selectedPaymentMethod;
-            
             const metaVal = document.getElementById('customerMetaInput').value.trim() || 'Dine-In';
-            document.getElementById('modalStrukMeta').innerText = metaVal;
+            const orderType = document.getElementById('orderTypeSelect').value;
 
-            document.getElementById('modalReceiptSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
-            document.getElementById('modalReceiptTax').innerText = `Rp ${tax.toLocaleString('id-ID')}`;
-            document.getElementById('modalReceiptTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            try {
+                // 1. Simpan Transaksi Utama ke Supabase
+                const { error: txError } = await supabaseClient.from('transaksi').insert([{
+                    id: currentNo,
+                    cabang_id: userSession.cabang,
+                    kasir_nama: userSession.nama,
+                    user_id: userSession.id || null,
+                    tipe_pesanan: orderType,
+                    customer_meta: metaVal,
+                    metode_bayar: selectedPaymentMethod,
+                    subtotal: subtotal,
+                    pajak: tax,
+                    total_bayar: total
+                }]);
 
-            const listContainer = document.getElementById('modalItemList');
-            listContainer.innerHTML = '';
-            cart.forEach(item => {
-                listContainer.innerHTML += `
-                    <div class="flex justify-between">
-                        <span>${item.qty}x ${item.name}</span>
-                        <span class="font-medium">Rp ${(item.qty * item.price).toLocaleString('id-ID')}</span>
-                    </div>
-                `;
-            });
+                if (txError) throw txError;
 
-            document.getElementById('strukModal').classList.remove('hidden');
+                // 2. Simpan Detail Item Transaksi & Potong Stok Cabang
+                for (let item of cart) {
+                    await supabaseClient.from('detail_transaksi').insert([{
+                        transaksi_id: currentNo,
+                        menu_id: item.id,
+                        nama_menu: item.name,
+                        qty: item.qty,
+                        harga_satuan: item.price,
+                        subtotal_item: item.price * item.qty
+                    }]);
 
-            cart = [];
-            document.getElementById('customerMetaInput').value = '';
-            document.getElementById('cashAmountInput').value = '';
-            document.getElementById('currentStrukNo').innerText = 'CC-2610-0' + Math.floor(11 + Math.random() * 80);
-            renderCart();
-            showToast('Pembayaran Berhasil! Silakan cetak struk.', 'success');
+                    // Query potong stok cabang
+                    const { data: stokData } = await supabaseClient
+                        .from('stok_cabang')
+                        .select('stok')
+                        .ilike('cabang_id', `%${userSession.cabang}%`)
+                        .eq('menu_id', item.id)
+                        .maybeSingle();
+
+                    if (stokData) {
+                        const sisaStok = Math.max(0, stokData.stok - item.qty);
+                        await supabaseClient
+                            .from('stok_cabang')
+                            .update({ stok: sisaStok })
+                            .ilike('cabang_id', `%${userSession.cabang}%`)
+                            .eq('menu_id', item.id);
+                    }
+                }
+
+                playAudio('chime');
+
+                document.getElementById('modalStrukNo').innerText = currentNo;
+                document.getElementById('modalStrukMethod').innerText = selectedPaymentMethod;
+                document.getElementById('modalStrukMeta').innerText = metaVal;
+                document.getElementById('modalReceiptSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+                document.getElementById('modalReceiptTax').innerText = `Rp ${tax.toLocaleString('id-ID')}`;
+                document.getElementById('modalReceiptTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+
+                const listContainer = document.getElementById('modalItemList');
+                listContainer.innerHTML = '';
+                cart.forEach(item => {
+                    listContainer.innerHTML += `
+                        <div class="flex justify-between">
+                            <span>${item.qty}x ${item.name}</span>
+                            <span class="font-medium">Rp ${(item.qty * item.price).toLocaleString('id-ID')}</span>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('strukModal').classList.remove('hidden');
+
+                cart = [];
+                document.getElementById('customerMetaInput').value = '';
+                document.getElementById('cashAmountInput').value = '';
+                
+                // Setel ulang nomor struk ke nomor unik baru & re-fetch stok
+                document.getElementById('currentStrukNo').innerText = generateStrukNo();
+                renderCart();
+                loadMenuFromSupabase();
+                showToast('Pembayaran Berhasil & Terhubung ke DB Pusat!', 'success');
+
+            } catch (err) {
+                showToast('Gagal menyimpan transaksi: ' + err.message, 'danger');
+            }
         }
 
         function closeStrukModal() {
@@ -857,10 +1048,33 @@
             showToast('Mencetak struk ke printer thermal kasir...', 'success');
         }
 
+        // ==========================================
+        // 4. REALTIME STOK LISTENER SUPABASE
+        // ==========================================
+        function initRealtimeStock() {
+            supabaseClient
+                .channel('realtime-stok-kasir')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table: 'stok_cabang'
+                    },
+                    (payload) => {
+                        loadMenuFromSupabase();
+                    }
+                )
+                .subscribe();
+        }
+
         window.onload = function() {
-            renderCatalog();
-            renderCart();
+            loadUserProfile();
+            loadMenuFromSupabase();
+            initRealtimeStock();
             switchPaymentMethod('Cash');
+            
+            document.getElementById('currentStrukNo').innerText = generateStrukNo();
         };
     </script>
 </body>

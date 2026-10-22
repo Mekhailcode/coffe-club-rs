@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Script Route Guard dijalankan paling awal -->
+    <script src="../../js/route-guard.js"></script>
     <title>Coffe Club'RS - Lapor Bug Kasir</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,7 +74,6 @@
             background: #801328;
         }
 
-        /* Glassmorphism & Immersive Glow Effects */
         .glow-card {
             box-shadow: 0 4px 20px -2px rgba(74, 14, 23, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -137,7 +141,7 @@
         <!-- Sidebar Bottom Footer -->
         <div class="p-4 border-t border-white/10 text-xs text-gray-400 bg-black/20 space-y-2">
             <div class="flex items-center justify-between">
-                <span class="flex items-center text-amber-300 font-medium text-[11px]">
+                <span id="sidebarUserName" class="flex items-center text-amber-300 font-medium text-[11px]">
                     <i class="fa-solid fa-user-check mr-1.5 text-emerald-400"></i> Sarah Amelia
                 </span>
                 <span class="text-[10px] font-mono text-gray-500">Kasir Shift 1</span>
@@ -152,7 +156,7 @@
         <!-- Top Navigation Bar -->
         <header class="bg-gradient-to-r from-maroon-deep via-maroon-vintage to-maroon-deep text-white p-4 md:px-8 border-b border-maroon-800 flex items-center justify-between shadow-md">
             <div>
-                <p class="text-xs text-amber-200/90 font-semibold flex items-center gap-2">
+                <p id="topBarBranchText" class="text-xs text-amber-200/90 font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-store text-amber-400"></i> Terminal Kasir POS — Cabang Senopati
                 </p>
             </div>
@@ -171,10 +175,11 @@
                     Kasir
                 </span>
                 
-                <a href="../../login/login.html" onclick="playAudio('click')" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm">
+                <!-- Tombol Keluar Logout -->
+                <button onclick="handleLogout()" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm cursor-pointer">
                     <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
-                </a>
+                </button>
             </div>
         </header>
 
@@ -188,7 +193,7 @@
                         <span id="bannerBranchBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
                             DUKUNGAN IT OUTLET
                         </span>
-                        <h3 class="text-base md:text-lg font-bold text-gray-900">
+                        <h3 id="bannerTitle" class="text-base md:text-lg font-bold text-gray-900">
                             Lapor Bug & Kendala Teknis Cabang Senopati
                         </h3>
                     </div>
@@ -198,7 +203,7 @@
                 </div>
             </div>
 
-            <!-- 4 Stat Summary Cards (Exact Match to Kasir Outlet Reference Design) -->
+            <!-- 4 Stat Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 
                 <!-- Card 1: Tiket Dilaporkan -->
@@ -207,28 +212,28 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">TIKET DILAPORKAN</span>
-                            <h4 id="statBugTotal" class="text-2xl font-black text-gray-900">3 Tiket</h4>
+                            <h4 id="statBugTotal" class="text-2xl font-black text-gray-900">0 Tiket</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg shadow-inner">
                             <i class="fa-solid fa-ticket"></i>
                         </div>
                     </div>
-                    <p id="statBugTotalSubtext" class="text-[11px] text-gray-400 mt-2 font-medium">Riwayat laporan Cabang Senopati</p>
+                    <p id="statBugTotalSubtext" class="text-[11px] text-gray-400 mt-2 font-medium">Riwayat laporan outlet</p>
                 </div>
 
-                <!-- Card 2: Sedang Diproses Dev (Highlighted Dark Card) -->
+                <!-- Card 2: Sedang Diproses Dev -->
                 <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between glow-card relative overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div>
                             <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">SEDANG DIPROSES DEV</span>
-                            <h4 id="statBugInProgress" class="text-2xl font-black text-amber-50">1 Kendala</h4>
+                            <h4 id="statBugInProgress" class="text-2xl font-black text-amber-50">0 Kendala</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center text-lg">
                             <i class="fa-solid fa-spinner animate-spin"></i>
                         </div>
                     </div>
                     <div id="statBugTicker" class="mt-2 text-[10px] font-bold bg-maroon-900/90 text-amber-200 px-2.5 py-1 rounded-lg border border-maroon-700/60 inline-block truncate max-w-full">
-                        BUG-2026-SNP-03: Printer Thermal Lag
+                        Tidak ada kendala aktif
                     </div>
                 </div>
 
@@ -238,7 +243,7 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">TIKET TERSELESAIKAN</span>
-                            <h4 id="statBugResolved" class="text-2xl font-black text-emerald-600">2 Selesai</h4>
+                            <h4 id="statBugResolved" class="text-2xl font-black text-emerald-600">0 Selesai</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shadow-inner">
                             <i class="fa-solid fa-circle-check"></i>
@@ -330,7 +335,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-xs border border-maroon-700">
+                        <button type="submit" id="submitBtn" class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-xs border border-maroon-700 cursor-pointer">
                             <i class="fa-solid fa-paper-plane text-amber-300"></i>
                             <span>Kirim Tiket Kendala Ke IT Developer</span>
                         </button>
@@ -342,7 +347,7 @@
                     <div>
                         <div class="p-5 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                                <h4 id="trackingTitle" class="font-bold text-gray-900 text-base">Tracking Tiket Laporan Cabang Senopati</h4>
+                                <h4 id="trackingTitle" class="font-bold text-gray-900 text-base">Tracking Tiket Laporan Outlet</h4>
                                 <p class="text-xs text-gray-500">Pantau proses perbaikan kendala oleh Tim Developer IT</p>
                             </div>
                             <select id="filterBugStatus" onchange="renderBugTickets()" class="px-3 py-1.5 text-xs border border-gray-300 rounded-xl font-semibold bg-white text-gray-700 focus:outline-none cursor-pointer">
@@ -372,15 +377,45 @@
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- JavaScript Application Logic -->
     <script>
+        // ==========================================
+        // 1. SUPABASE CLIENT & SESSION CONFIG
+        // ==========================================
+        const SUPABASE_URL = 'https://vkyqddubwyabbbeegqlj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const sessionData = JSON.parse(localStorage.getItem('user_session')) || {
+            nama: 'Sarah Amelia',
+            cabang: 'Senopati'
+        };
+
         let audioMuted = false;
         let audioCtx = null;
+        let kasirBugTickets = [];
+
+        function loadUserProfile() {
+            const scopeEl = document.getElementById('sidebarScopeText');
+            if (scopeEl) scopeEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang ${sessionData.cabang}`;
+
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-user-check mr-1.5 text-emerald-400"></i> ${sessionData.nama}`;
+
+            const headerBranch = document.getElementById('topBarBranchText');
+            if (headerBranch) headerBranch.innerHTML = `<i class="fa-solid fa-store text-amber-400"></i> Terminal Kasir POS — Cabang ${sessionData.cabang}`;
+
+            const bannerText = document.getElementById('bannerTitle');
+            if (bannerText) bannerText.innerText = `Lapor Bug & Kendala Teknis Cabang ${sessionData.cabang}`;
+
+            const trackTitle = document.getElementById('trackingTitle');
+            if (trackTitle) trackTitle.innerText = `Tracking Tiket Laporan Cabang ${sessionData.cabang}`;
+
+            const subtext = document.getElementById('statBugTotalSubtext');
+            if (subtext) subtext.innerText = `Riwayat laporan Cabang ${sessionData.cabang}`;
+        }
 
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             return audioCtx;
         }
 
@@ -431,7 +466,6 @@
             }
         }
 
-        // Live Clock
         function updateClock() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID') + ' WIB';
@@ -441,47 +475,9 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        let kasirBugTickets = [
-            {
-                id: "BUG-2026-SNP-03",
-                module: "Printer Thermal ESC/POS",
-                branch: "Cabang Senopati",
-                title: "Printer thermal kasir Senopati lambat respon saat cetak resi QRIS",
-                description: "Setelah transaksi QRIS berhasil, tombol cetak resi membutuhkan delay sekitar 8-12 detik sebelum mesin melepaskan kertas.",
-                severity: "Sedang",
-                status: "Diproses Dev",
-                devAssigned: "Rian (Lead Backend & IoT)",
-                devNotes: "Sedang perbaikan timeout handshake driver bluetooth ESC/POS versi 3.02.",
-                time: "15 Okt 2026, 09:15 WIB"
-            },
-            {
-                id: "BUG-2026-SNP-02",
-                module: "Presensi & Absensi Fingerprint",
-                branch: "Cabang Senopati",
-                title: "Jam masuk shift pagi Sarah Amelia sempat gagal sync ke server",
-                description: "Check-in pukul 06:48 WIB tercatat di mesin lokal namun indikator cloud menunjukkan pending sync selama 10 menit.",
-                severity: "Rendah",
-                status: "Selesai / Resolved",
-                devAssigned: "Eka (Frontend Engineer)",
-                devNotes: "Data absensi otomatis tersinkron saat koneksi internet cadangan aktif.",
-                time: "12 Okt 2026, 07:10 WIB"
-            },
-            {
-                id: "BUG-2026-SNP-01",
-                module: "Pembayaran QRIS & Debit EDC",
-                branch: "Cabang Senopati",
-                title: "Sinyal mesin EDC Mandiri sempat RTO jam 12 siang",
-                description: "Proses approval payment EDC Mandiri memerlukan waktu 2 kali tap kartu.",
-                severity: "Sedang",
-                status: "Selesai / Resolved",
-                devAssigned: "Rian (Lead Backend & IoT)",
-                devNotes: "Sinyal SIM card EDC disetel ke mode APN prioritas tinggi.",
-                time: "08 Okt 2026, 12:20 WIB"
-            }
-        ];
-
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if(!container) return;
             const toast = document.createElement('div');
             let bgStyle = 'bg-maroon-vintage text-amber-100 border-maroon-700';
             let icon = 'fa-circle-info text-amber-300';
@@ -493,14 +489,44 @@
             toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
             
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        }
+
+        // ==========================================
+        // 2. FETCH & SUBMIT BUG REPORTS VIA SUPABASE
+        // ==========================================
+        async function fetchBugTicketsFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('bug_reports')
+                    .select('*')
+                    .ilike('cabang_id', `%${sessionData.cabang}%`)
+                    .order('created_at', { ascending: false });
+
+                if (!error && data) {
+                    kasirBugTickets = data.map(b => ({
+                        id: b.id,
+                        module: b.modul || 'General',
+                        branch: b.cabang_id,
+                        title: b.judul || b.title,
+                        description: b.deskripsi || b.description,
+                        severity: b.urgensi || 'Sedang',
+                        status: b.status || 'Menunggu Review',
+                        devAssigned: b.dev_assigned || 'Tim Developer IT',
+                        devNotes: b.dev_notes || '',
+                        time: new Date(b.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) + ' WIB'
+                    }));
+                } else {
+                    kasirBugTickets = [];
+                }
+                renderBugTickets();
+            } catch (err) {
+                console.error("Gagal muat tiket bug:", err);
+            }
         }
 
         function renderBugTickets() {
@@ -511,41 +537,46 @@
             const statusFilter = document.getElementById('filterBugStatus') ? document.getElementById('filterBugStatus').value : 'all';
 
             let filtered = kasirBugTickets;
-
             if(statusFilter !== 'all') {
-                filtered = filtered.filter(b => b.status === statusFilter);
+                filtered = filtered.filter(b => b.status === statusFilter || (statusFilter === 'Diproses Dev' && b.status === 'Sedang Diproses'));
             }
 
-            const total = filtered.length;
-            const inProgress = filtered.filter(b => b.status === 'Diproses Dev').length;
-            const resolved = filtered.filter(b => b.status === 'Selesai / Resolved').length;
-            const critical = filtered.filter(b => b.severity.includes('Critical')).length;
+            const total = kasirBugTickets.length;
+            const inProgress = kasirBugTickets.filter(b => b.status === 'Diproses Dev' || b.status === 'Sedang Diproses' || b.status === 'Menunggu Review').length;
+            const resolved = kasirBugTickets.filter(b => b.status.includes('Selesai') || b.status.includes('Resolved')).length;
+            const critical = kasirBugTickets.filter(b => b.severity && b.severity.includes('Critical')).length;
 
             document.getElementById('statBugTotal').innerText = `${total} Tiket`;
             document.getElementById('statBugInProgress').innerText = `${inProgress} Kendala`;
             document.getElementById('statBugResolved').innerText = `${resolved} Selesai`;
             document.getElementById('statBugCritical').innerText = critical > 0 ? `${critical} Critical` : 'Normal';
 
-            const ticker = kasirBugTickets.find(b => b.status === 'Diproses Dev');
+            const ticker = kasirBugTickets.find(b => b.status === 'Diproses Dev' || b.status === 'Sedang Diproses');
             if (ticker) {
-                document.getElementById('statBugTicker').innerText = `${ticker.id}: ${ticker.title.substring(0, 30)}...`;
+                document.getElementById('statBugTicker').innerText = `#${ticker.id}: ${ticker.title.substring(0, 22)}...`;
             } else {
                 document.getElementById('statBugTicker').innerText = "Tidak ada kendala aktif";
             }
 
             if(filtered.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-gray-400 italic text-xs"><i class="fa-solid fa-folder-open text-2xl block mb-2 opacity-50"></i>Tidak ada tiket laporan kendala dalam kategori ini.</div>`;
+                container.innerHTML = `<div class="text-center py-12 text-gray-400 italic text-xs"><i class="fa-solid fa-folder-open text-2xl block mb-2 opacity-50"></i>Belum ada tiket laporan kendala dari cabang ini.</div>`;
                 return;
             }
 
             filtered.forEach(ticket => {
                 let statusBadge = "bg-amber-50 text-amber-800 border-amber-300 font-bold";
                 let statusIcon = "fa-clock";
-                if(ticket.status === 'Diproses Dev') { statusBadge = "bg-amber-100 text-amber-900 border-amber-300 animate-pulse font-bold"; statusIcon = "fa-spinner fa-spin"; }
-                if(ticket.status === 'Selesai / Resolved') { statusBadge = "bg-emerald-100 text-emerald-900 border-emerald-300 font-bold"; statusIcon = "fa-circle-check"; }
+                if(ticket.status === 'Diproses Dev' || ticket.status === 'Sedang Diproses') { 
+                    statusBadge = "bg-amber-100 text-amber-900 border-amber-300 animate-pulse font-bold"; 
+                    statusIcon = "fa-spinner fa-spin"; 
+                }
+                if(ticket.status.includes('Selesai') || ticket.status.includes('Resolved')) { 
+                    statusBadge = "bg-emerald-100 text-emerald-900 border-emerald-300 font-bold"; 
+                    statusIcon = "fa-circle-check"; 
+                }
 
                 let sevBadge = "bg-gray-100 text-gray-700 font-medium";
-                if(ticket.severity.includes('Critical')) sevBadge = "bg-red-100 text-red-800 font-bold border border-red-200";
+                if(ticket.severity && ticket.severity.includes('Critical')) sevBadge = "bg-red-100 text-red-800 font-bold border border-red-200";
                 if(ticket.severity === 'Sedang') sevBadge = "bg-amber-50 text-amber-800 font-semibold border border-amber-200";
 
                 const card = `
@@ -553,7 +584,7 @@
                         <div class="flex items-start justify-between gap-2">
                             <div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="font-extrabold text-xs text-maroon-700 font-mono">${ticket.id}</span>
+                                    <span class="font-extrabold text-xs text-maroon-700 font-mono">#${ticket.id}</span>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-200/80 text-gray-700">${ticket.module}</span>
                                     <span class="px-2 py-0.5 rounded text-[10px] ${sevBadge}">${ticket.severity}</span>
                                 </div>
@@ -596,43 +627,79 @@
             }
         }
 
-        function submitBugForm(e) {
+        async function submitBugForm(e) {
             e.preventDefault();
             playAudio('chime');
-            
-            const module = document.getElementById('bugModule').value;
-            const severity = document.getElementById('bugSeverity').value;
-            const device = document.getElementById('bugDevice').value;
-            const title = document.getElementById('bugTitle').value;
-            const description = document.getElementById('bugDescription').value;
 
-            const newTicket = {
-                id: 'BUG-2026-SNP-' + Math.floor(10 + Math.random() * 80),
-                module,
-                branch: "Cabang Senopati",
-                title,
-                description,
-                severity,
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Mengirim...</span>`;
+
+            // Payload dikirim tanpa field 'id' agar Supabase mengisi id auto-increment SERIAL
+            const payload = {
+                cabang_id: sessionData.cabang || 'Senopati',
+                kasir_nama: sessionData.nama || 'Kasir On-Duty',
+                modul: document.getElementById('bugModule').value,
+                urgensi: document.getElementById('bugSeverity').value,
+                perangkat: document.getElementById('bugDevice').value,
+                judul: document.getElementById('bugTitle').value,
+                deskripsi: document.getElementById('bugDescription').value,
                 status: 'Menunggu Review',
-                devAssigned: 'Tim Developer IT (On-Call Kasir)',
-                devNotes: 'Tiket diterima dari Terminal Kasir Senopati. Dalam antrean verifikasi engineer.',
-                time: 'Baru Saja'
+                dev_assigned: 'Tim IT Developer'
             };
 
-            kasirBugTickets.unshift(newTicket);
-            renderBugTickets();
+            try {
+                const { data, error } = await supabaseClient
+                    .from('bug_reports')
+                    .insert([payload])
+                    .select();
 
-            document.getElementById('bugTitle').value = '';
-            document.getElementById('bugDescription').value = '';
-            document.getElementById('bugFile').value = '';
-            document.getElementById('bugFileName').innerText = "Klik untuk melampirkan foto / screenshot (PNG, JPG)";
-            document.getElementById('bugFileName').classList.remove('text-maroon-700', 'font-bold');
+                if (error) throw error;
 
-            showToast(`Tiket kendala #${newTicket.id} berhasil terkirim ke Tim Developer!`, 'success');
+                if (!data || data.length === 0) {
+                    throw new Error("Laporan ditolak oleh database. Periksa izin RLS Policy di Supabase!");
+                }
+
+                showToast(`Tiket kendala #${data[0].id} terkirim ke Developer!`, 'success');
+
+                document.getElementById('bugTitle').value = '';
+                document.getElementById('bugDescription').value = '';
+                document.getElementById('bugFile').value = '';
+                document.getElementById('bugFileName').innerText = "Klik untuk melampirkan foto / screenshot (PNG, JPG)";
+                document.getElementById('bugFileName').classList.remove('text-maroon-700', 'font-bold');
+
+                await fetchBugTicketsFromSupabase();
+
+            } catch (err) {
+                console.error("Error submit bug:", err);
+                showToast('Gagal mengirim tiket: ' + err.message, 'danger');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane text-amber-300"></i> <span>Kirim Tiket Kendala Ke IT Developer</span>`;
+            }
+        }
+
+        function initBugRealtime() {
+            supabaseClient
+                .channel('realtime-bug-reports-kasir')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table: 'bug_reports'
+                    },
+                    () => {
+                        fetchBugTicketsFromSupabase();
+                    }
+                )
+                .subscribe();
         }
 
         window.onload = function() {
-            renderBugTickets();
+            loadUserProfile();
+            fetchBugTicketsFromSupabase();
+            initBugRealtime();
         };
     </script>
 </body>
