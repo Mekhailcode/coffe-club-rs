@@ -12,6 +12,9 @@
 
     <!-- Supabase JS Client SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    
+
+    <!-- QRCode JS Library Generator (Stable CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     
     <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,7 +106,7 @@
         <div>
             <!-- Header Brand Sidebar -->
             <div class="p-5 border-b border-white/10 bg-gradient-to-b from-maroon-deep to-darkSidebar">
-                <h1 class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
+                <h1 id="sidebarBrandName" class="text-xl font-bold tracking-wider text-amber-100 drop-shadow flex items-center gap-2">
                     <i class="fa-solid fa-mug-hot text-amber-400"></i> Coffe Club'RS
                 </h1>
                 <p class="text-[10px] text-amber-200/70 font-semibold tracking-widest uppercase mt-0.5">
@@ -285,7 +288,7 @@
                             <span id="cartSubtotal" class="font-semibold text-gray-800">Rp 0</span>
                         </div>
                         <div class="flex justify-between text-gray-600">
-                            <span>Pajak Restoran PB1 (10%):</span>
+                            <span id="taxLabel">Pajak Restoran PB1 (10%):</span>
                             <span id="cartTax" class="font-semibold text-gray-800">Rp 0</span>
                         </div>
                         <div class="flex justify-between items-center pt-2 border-t border-gray-200/80">
@@ -294,7 +297,7 @@
                         </div>
                     </div>
 
-                    <!-- Metode Pembayaran Inline Tabs (Hanya Cash & QRIS) -->
+                    <!-- Metode Pembayaran Inline Tabs -->
                     <div class="space-y-2">
                         <label class="text-[10px] font-black uppercase text-gray-600 tracking-wider block">Pilih Metode Pembayaran:</label>
                         <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
@@ -329,25 +332,25 @@
                         </div>
                     </div>
 
-                    <!-- Direct Form: QRIS -->
-                    <div id="payFormQRIS" class="pay-form hidden text-center space-y-1.5 text-xs bg-white p-2.5 rounded-xl border border-gray-200">
+                    <!-- Direct Form: QRIS Preview Panel -->
+                    <div id="payFormQRIS" class="pay-form hidden text-center space-y-2 text-xs bg-white p-3 rounded-2xl border border-gray-200 shadow-sm">
                         <div class="flex items-center justify-center space-x-3">
-                            <div class="w-16 h-16 bg-gray-50 border border-gray-300 rounded-lg flex items-center justify-center">
-                                <i class="fa-solid fa-qrcode text-4xl text-maroon-900"></i>
+                            <div class="w-16 h-16 bg-maroon-50 border border-maroon-200 rounded-xl flex items-center justify-center text-maroon-700 text-2xl font-black shadow-inner">
+                                <i class="fa-solid fa-qrcode"></i>
                             </div>
-                            <div class="text-left">
-                                <p class="font-bold text-gray-800 text-xs">Scan QRIS Kasir</p>
-                                <p class="text-[10px] text-gray-500">GoPay, OVO, ShopeePay, Dana & BCA</p>
-                                <span class="inline-block mt-0.5 text-[9px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>Siap Scan</span>
+                            <div class="text-left flex-1">
+                                <p class="font-bold text-gray-800 text-xs">Metode QRIS Merchant</p>
+                                <p class="text-[10px] text-gray-500">Klik tombol di bawah untuk menampilkan QRIS utuh & verifikasi realtime</p>
+                                <span class="inline-block mt-1 text-[9px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>Siap Scan</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="pt-1">
-                        <button onclick="confirmPaymentAndPrint()" class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 active:scale-[0.99] text-amber-100 font-extrabold rounded-xl text-xs transition-all shadow-md border border-maroon-700 flex items-center justify-center space-x-2">
+                        <button onclick="confirmPaymentAndPrint()" class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 active:scale-[0.99] text-amber-100 font-extrabold rounded-xl text-xs transition-all shadow-md border border-maroon-700 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-check-circle text-amber-300 text-sm"></i>
-                            <span>Bayar & Cetak Struk</span>
+                            <span id="payBtnText">Bayar & Cetak Struk</span>
                         </button>
                     </div>
 
@@ -356,6 +359,57 @@
             </div>
 
         </main>
+    </div>
+
+    <!-- MODAL POP-UP QRIS UTUH & VERIFIKASI REAL-TIME -->
+    <div id="qrisModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-gray-300 space-y-4 text-center">
+            <button onclick="closeQrisModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="border-b border-gray-100 pb-3">
+                <span class="px-3 py-1 bg-maroon-50 text-maroon-700 rounded-full text-[10px] font-extrabold uppercase border border-maroon-200">
+                    Pembayaran QRIS Merchant
+                </span>
+                <h3 class="font-black text-gray-900 text-base mt-2">Scan Kode QRIS Pembayaran</h3>
+                <p class="text-xs text-gray-500">Tunjukkan QR ini ke pelanggan untuk di-scan</p>
+            </div>
+
+            <!-- Tampilan Render Kode QRIS Merchant -->
+            <div class="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex flex-col justify-center items-center space-y-2">
+                <div id="qrcodeCanvas" class="bg-white p-2.5 rounded-xl border border-gray-300 shadow-sm flex justify-center items-center min-w-[220px] min-h-[220px]"></div>
+                <div class="text-center pt-1 border-t border-gray-200 w-full">
+                    <p class="text-[11px] font-extrabold text-gray-800 uppercase tracking-wide">
+                        COFFE CLUB'RS
+                    </p>
+                    <p class="text-[10px] font-mono font-bold text-gray-500">
+                        NMID: <span class="text-maroon-700">ID1026633054444</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Total Tagihan Pelanggan & Dynamic Status Banner -->
+            <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-1">
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Total Tagihan Pelanggan</span>
+                <h4 id="qrisModalTotal" class="text-2xl font-black text-maroon-700">Rp 0</h4>
+                
+                <!-- Status Realtime Indicator -->
+                <div id="qrisStatusBanner" class="pt-1 flex items-center justify-center space-x-2 text-xs font-bold text-amber-800">
+                    <i class="fa-solid fa-spinner fa-spin text-amber-600"></i>
+                    <span id="qrisStatusText">Menunggu pembayaran pelanggan...</span>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi Konfirmasi -->
+            <div class="pt-1 flex gap-2">
+                <button type="button" onclick="closeQrisModal()" class="w-1/3 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors cursor-pointer">Batal</button>
+                <button type="button" onclick="processQrisSuccess()" class="w-2/3 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl transition-colors shadow-md flex items-center justify-center space-x-1.5 cursor-pointer">
+                    <i class="fa-solid fa-circle-check text-amber-300"></i>
+                    <span>Konfirmasi Lunas</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Modal Thermal Receipt Printing -->
@@ -367,7 +421,7 @@
 
             <!-- Thermal Receipt Header -->
             <div class="text-center border-b border-dashed border-gray-300 pb-4 space-y-1">
-                <h3 class="font-extrabold text-lg text-gray-900 tracking-wider">Coffe Club'RS</h3>
+                <h3 id="modalBrandTitle" class="font-extrabold text-lg text-gray-900 tracking-wider">Coffe Club'RS</h3>
                 <p id="modalBranchName" class="text-xs font-semibold text-gray-600">Cabang Senopati</p>
                 <p class="text-[10px] text-gray-400">Jl. Senopati No. 45, Jakarta Selatan</p>
             </div>
@@ -388,14 +442,21 @@
             <!-- Total Calculation -->
             <div class="text-xs space-y-1.5">
                 <div class="flex justify-between text-gray-600"><span>Subtotal:</span><span id="modalReceiptSubtotal" class="font-semibold">Rp 0</span></div>
-                <div class="flex justify-between text-gray-600"><span>Pajak Restoran PB1 (10%):</span><span id="modalReceiptTax" class="font-semibold">Rp 0</span></div>
+                <div class="flex justify-between text-gray-600"><span id="modalTaxLabel">Pajak Restoran PB1 (10%):</span><span id="modalReceiptTax" class="font-semibold">Rp 0</span></div>
                 <div class="flex justify-between text-sm font-black text-gray-900 pt-2 border-t border-gray-200"><span>TOTAL BAYAR:</span><span id="modalReceiptTotal" class="text-maroon-700">Rp 0</span></div>
+            </div>
+
+            <!-- Thermal Receipt Footer -->
+            <div class="text-center border-t border-dashed border-gray-300 pt-3">
+                <p id="modalReceiptFooter" class="text-[10px] text-gray-600 font-medium leading-relaxed italic whitespace-pre-line">
+                    Terima kasih atas kunjungan Anda di Coffe Club'RS!
+                </p>
             </div>
 
             <!-- Modal Actions -->
             <div class="pt-2 flex gap-2">
-                <button onclick="closeStrukModal()" class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors">Tutup</button>
-                <button onclick="printStrukAction()" class="w-full py-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold rounded-xl transition-colors flex items-center justify-center space-x-1.5 shadow-md">
+                <button onclick="closeStrukModal()" class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors cursor-pointer">Tutup</button>
+                <button onclick="printStrukAction()" class="w-full py-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold rounded-xl transition-colors flex items-center justify-center space-x-1.5 shadow-md cursor-pointer">
                     <i class="fa-solid fa-print text-amber-300"></i>
                     <span>Cetak Thermal</span>
                 </button>
@@ -414,6 +475,11 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        const DEFAULT_FOOTER = "Terima kasih atas kunjungan Anda di Coffe Club'RS! Nikmati kopi terbaik kami dan bagikan momen Anda di @coffeclubrs.";
+
+        // Payload String QRIS Merchant Resmi
+        const QRIS_PAYLOAD_STRING = "00020101021126610014COM.GO-JEK.WWW01189360091436109796240210G6109796240303UMI51440014ID.CO.QRIS.WWW0215ID10266330544440303UMI5204899953033605802ID5910Algran CNW6015JAKARTA SELATAN61051252062070703A0163043FFC";
+
         const userSession = JSON.parse(localStorage.getItem('user_session')) || {
             nama: 'Petugas Kasir',
             cabang: 'Senopati'
@@ -425,8 +491,10 @@
         let cart = [];
         let selectedPaymentMethod = 'Cash';
         let menuProducts = [];
+        
+        // Listener Realtime QRIS Global
+        let qrisRealtimeChannel = null;
 
-        // Generator Nomor Struk Otomatis Unik Real-time
         function generateStrukNo() {
             const now = new Date();
             const dateStr = now.getFullYear().toString().slice(-2) + 
@@ -440,7 +508,55 @@
             return `CC-${dateStr}-${timeStr}-${randomNum}`;
         }
 
+        function renderQrisCode() {
+            const container = document.getElementById('qrcodeCanvas');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            setTimeout(() => {
+                try {
+                    if (typeof QRCode !== 'undefined') {
+                        new QRCode(container, {
+                            text: QRIS_PAYLOAD_STRING,
+                            width: 220,
+                            height: 220,
+                            colorDark: "#36080F",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    } else {
+                        throw new Error("Library QRCode tidak terdeteksi");
+                    }
+                } catch (err) {
+                    console.warn("Menggunakan fallback QR Code Generator API:", err);
+                    const encodedData = encodeURIComponent(QRIS_PAYLOAD_STRING);
+                    container.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=36080F&data=${encodedData}" alt="Kode QRIS Merchant" class="w-[220px] h-[220px] object-contain rounded-lg shadow-sm">`;
+                }
+            }, 50);
+        }
+
         function loadUserProfile() {
+            const savedBrand = localStorage.getItem('brandName') || "Coffe Club'RS";
+            const savedTax = localStorage.getItem('taxRate') || "10";
+            const savedFooter = localStorage.getItem('receiptFooter') || DEFAULT_FOOTER;
+
+            const sidebarBrand = document.getElementById('sidebarBrandName');
+            if (sidebarBrand) {
+                sidebarBrand.innerHTML = `<i class="fa-solid fa-mug-hot text-amber-400"></i> ${savedBrand}`;
+            }
+
+            const modalBrand = document.getElementById('modalBrandTitle');
+            if (modalBrand) modalBrand.innerText = savedBrand;
+
+            const taxLabel = document.getElementById('taxLabel');
+            if (taxLabel) taxLabel.innerText = `Pajak Restoran PB1 (${savedTax}%):`;
+
+            const modalTaxLabel = document.getElementById('modalTaxLabel');
+            if (modalTaxLabel) modalTaxLabel.innerText = `Pajak Restoran PB1 (${savedTax}%):`;
+
+            const modalFooter = document.getElementById('modalReceiptFooter');
+            if (modalFooter) modalFooter.innerText = savedFooter;
+
             const scopeEls = document.querySelectorAll('#sidebarScopeText');
             scopeEls.forEach(el => {
                 el.innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang ${userSession.cabang}`;
@@ -457,15 +573,49 @@
             }
 
             const modalBranch = document.getElementById('modalBranchName');
-            if (modalBranch) {
-                modalBranch.innerText = `Cabang ${userSession.cabang}`;
-            }
+            if (modalBranch) modalBranch.innerText = `Cabang ${userSession.cabang}`;
 
             const modalKasir = document.getElementById('modalStrukKasir');
-            if (modalKasir) {
-                modalKasir.innerText = userSession.nama;
+            if (modalKasir) modalKasir.innerText = userSession.nama;
+        }
+
+        async function fetchSettingsFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('pengaturan_sistem')
+                    .select('*')
+                    .eq('id', 1)
+                    .maybeSingle();
+
+                if (data && !error) {
+                    if (data.nama_brand) localStorage.setItem('brandName', data.nama_brand);
+                    if (data.tarif_pajak !== undefined) localStorage.setItem('taxRate', data.tarif_pajak);
+                    if (data.footer_struk) localStorage.setItem('receiptFooter', data.footer_struk);
+                    loadUserProfile();
+                    if (cart.length > 0) renderCart();
+                }
+            } catch (err) {
+                console.warn("Gagal menarik pengaturan cloud:", err);
             }
         }
+
+        function initRealtimeSettings() {
+            supabaseClient
+                .channel('realtime-pengaturan-sistem')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: 'pengaturan_sistem' },
+                    () => fetchSettingsFromSupabase()
+                )
+                .subscribe();
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (['receiptFooter', 'brandName', 'taxRate'].includes(e.key)) {
+                loadUserProfile();
+                if (cart.length > 0) renderCart();
+            }
+        });
 
         function getAudioContext() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -565,14 +715,11 @@
         }
 
         // ==========================================
-        // 2. LOAD MENU & STOK READ-ONLY FROM SUPABASE
+        // 2. LOAD MENU & STOK FROM SUPABASE
         // ==========================================
         async function loadMenuFromSupabase() {
             try {
-                // Fetch Menu Master
                 const { data: menuData, error: menuErr } = await supabaseClient.from('menu').select('*');
-                
-                // Fetch Stok Cabang Kasir
                 const { data: stokData } = await supabaseClient
                     .from('stok_cabang')
                     .select('*')
@@ -580,9 +727,7 @@
 
                 const stokMap = {};
                 if (stokData) {
-                    stokData.forEach(s => {
-                        stokMap[s.menu_id] = s.stok;
-                    });
+                    stokData.forEach(s => stokMap[s.menu_id] = s.stok);
                 }
 
                 if (!menuErr && menuData && menuData.length > 0) {
@@ -621,15 +766,10 @@
             grid.innerHTML = '';
 
             const searchValue = document.getElementById('searchMenuInput').value.toLowerCase();
-
             let filtered = menuProducts;
-            if (activeCategory !== 'all') {
-                filtered = filtered.filter(p => p.category === activeCategory);
-            }
 
-            if (searchValue.trim() !== '') {
-                filtered = filtered.filter(p => p.name.toLowerCase().includes(searchValue));
-            }
+            if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
+            if (searchValue.trim() !== '') filtered = filtered.filter(p => p.name.toLowerCase().includes(searchValue));
 
             if (filtered.length === 0) {
                 grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 italic text-xs">Tidak ada menu yang sesuai pencarian.</div>`;
@@ -731,16 +871,13 @@
             renderCart();
         }
 
-        // FUNGSI UNTUK MENGETIK KUALITAS PESANAN SECARA LANGSUNG
         function manualSetQty(productId, inputVal) {
             const item = cart.find(c => c.id === productId);
             const product = menuProducts.find(p => p.id === productId);
             if (!item || !product) return;
 
             let parsed = parseInt(inputVal);
-            if (isNaN(parsed) || parsed < 1) {
-                return; // Biarkan kasir mengetik angka
-            }
+            if (isNaN(parsed) || parsed < 1) return;
 
             if (parsed > product.stock) {
                 showToast(`Batas sisa stok ${product.name} (${product.stock}) tercapai!`, 'danger');
@@ -772,16 +909,16 @@
 
         function updateCartTotalsOnly() {
             let subtotal = 0;
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+
             cart.forEach(item => {
                 const itemTotal = item.price * item.qty;
                 subtotal += itemTotal;
                 const totalEl = document.getElementById(`cart-item-total-${item.id}`);
-                if (totalEl) {
-                    totalEl.innerText = `Rp ${itemTotal.toLocaleString('id-ID')}`;
-                }
+                if (totalEl) totalEl.innerText = `Rp ${itemTotal.toLocaleString('id-ID')}`;
             });
 
-            const tax = Math.round(subtotal * 0.10);
+            const tax = Math.round(subtotal * taxPct);
             const total = subtotal + tax;
 
             document.getElementById('cartSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
@@ -826,6 +963,7 @@
             }
 
             let subtotal = 0;
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
 
             cart.forEach(item => {
                 const product = menuProducts.find(p => p.id === item.id) || item;
@@ -863,7 +1001,7 @@
                 container.innerHTML += row;
             });
 
-            const tax = Math.round(subtotal * 0.10);
+            const tax = Math.round(subtotal * taxPct);
             const total = subtotal + tax;
 
             document.getElementById('cartSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
@@ -883,18 +1021,23 @@
 
             document.querySelectorAll('.pay-form').forEach(f => f.classList.add('hidden'));
 
+            const payBtnText = document.getElementById('payBtnText');
+
             if (method === 'Cash') {
                 document.getElementById('payTabCash').className = 'pay-tab py-2.5 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
                 document.getElementById('payFormCash').classList.remove('hidden');
+                if (payBtnText) payBtnText.innerText = "Bayar & Cetak Struk";
             } else if (method === 'QRIS') {
                 document.getElementById('payTabQRIS').className = 'pay-tab py-2.5 rounded-xl bg-maroon-vintage text-amber-100 border border-maroon-700 flex items-center justify-center gap-1.5 shadow-sm transition-all';
                 document.getElementById('payFormQRIS').classList.remove('hidden');
+                if (payBtnText) payBtnText.innerText = "Tampilkan QRIS Pembayaran";
             }
         }
 
         function calculateChange() {
             let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            let total = subtotal + Math.round(subtotal * 0.10);
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+            let total = subtotal + Math.round(subtotal * taxPct);
             
             let cashVal = parseFloat(document.getElementById('cashAmountInput').value) || 0;
             let change = cashVal - total;
@@ -920,7 +1063,8 @@
         function setQuickCash(val) {
             playAudio('click');
             let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            let total = subtotal + Math.round(subtotal * 0.10);
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+            let total = subtotal + Math.round(subtotal * taxPct);
 
             if (val === 'exact') {
                 document.getElementById('cashAmountInput').value = total;
@@ -931,51 +1075,117 @@
         }
 
         // ==========================================
-        // 3. PROCESS PAYMENT & DB TRANSACTION INSERTION
+        // 3. PROCESS PAYMENT & REAL-TIME QRIS HANDLERS
         // ==========================================
-        async function confirmPaymentAndPrint() {
+        async function openQrisModal() {
             if (cart.length === 0) {
                 showToast('Pilih menu terlebih dahulu!', 'danger');
                 return;
             }
 
             let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            let tax = Math.round(subtotal * 0.10);
-            let total = subtotal + tax;
-
-            if (selectedPaymentMethod === 'Cash') {
-                let cashVal = parseFloat(document.getElementById('cashAmountInput').value) || 0;
-                if (cashVal < total) {
-                    showToast('Uang tunai diterima kurang dari total bayar!', 'danger');
-                    return;
-                }
-            }
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+            let total = subtotal + Math.round(subtotal * taxPct);
 
             const currentNo = document.getElementById('currentStrukNo').innerText;
+
+            document.getElementById('qrisModalTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            
+            // Reset status UI indicator modal QRIS
+            const banner = document.getElementById('qrisStatusBanner');
+            if (banner) {
+                banner.className = 'pt-1 flex items-center justify-center space-x-2 text-xs font-bold text-amber-800';
+                banner.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-amber-600"></i><span id="qrisStatusText">Menunggu pembayaran pelanggan (Real-Time)...</span>`;
+            }
+
+            document.getElementById('qrisModal').classList.remove('hidden');
+            
+            // Render Gambar QRIS
+            renderQrisCode();
+
+            // 1. Simpan Draft Transaksi Awal di Database Supabase (Status: PENDING)
+            await savePendingQrisTransaction(currentNo, subtotal, total);
+
+            // 2. Pasang Listener Realtime khusus Struk No ini
+            listenQrisRealtimePayment(currentNo);
+        }
+
+        async function savePendingQrisTransaction(strukNo, subtotal, total) {
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+            let tax = Math.round(subtotal * taxPct);
             const metaVal = document.getElementById('customerMetaInput').value.trim() || 'Dine-In';
             const orderType = document.getElementById('orderTypeSelect').value;
 
             try {
-                // 1. Simpan Transaksi Utama ke Supabase
-                const { error: txError } = await supabaseClient.from('transaksi').insert([{
-                    id: currentNo,
-                    cabang_id: userSession.cabang,
-                    kasir_nama: userSession.nama,
-                    user_id: userSession.id || null,
-                    tipe_pesanan: orderType,
-                    customer_meta: metaVal,
-                    metode_bayar: selectedPaymentMethod,
-                    subtotal: subtotal,
-                    pajak: tax,
-                    total_bayar: total
-                }]);
+                // Cek apakah transaksi sudah terdaftar di database
+                const { data: existing } = await supabaseClient
+                    .from('transaksi')
+                    .select('id')
+                    .eq('id', strukNo)
+                    .maybeSingle();
 
-                if (txError) throw txError;
+                if (!existing) {
+                    const { error } = await supabaseClient.from('transaksi').insert([{
+                        id: strukNo,
+                        cabang_id: userSession.cabang,
+                        kasir_nama: userSession.nama,
+                        user_id: userSession.id || null,
+                        tipe_pesanan: orderType,
+                        customer_meta: metaVal,
+                        metode_bayar: 'QRIS',
+                        subtotal: subtotal,
+                        pajak: tax,
+                        total_bayar: total,
+                        status: 'PENDING'
+                    }]);
 
-                // 2. Simpan Detail Item Transaksi & Potong Stok Cabang
+                    if (error) console.error("Gagal membuat draft PENDING:", error);
+                }
+            } catch (err) {
+                console.error("Error draft PENDING:", err);
+            }
+        }
+
+        function listenQrisRealtimePayment(strukNo) {
+            // Bersihkan channel listener lama jika ada
+            if (qrisRealtimeChannel) {
+                supabaseClient.removeChannel(qrisRealtimeChannel);
+                qrisRealtimeChannel = null;
+            }
+
+            // Pasang Realtime Channel listener untuk tabel 'transaksi'
+            qrisRealtimeChannel = supabaseClient
+                .channel(`qris-listen-${strukNo}`)
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'transaksi',
+                        filter: `id=eq.${strukNo}`
+                    },
+                    async (payload) => {
+                        // Deteksi seketika saat status berubah menjadi 'LUNAS'
+                        if (payload.new && payload.new.status === 'LUNAS') {
+                            if (qrisRealtimeChannel) {
+                                supabaseClient.removeChannel(qrisRealtimeChannel);
+                                qrisRealtimeChannel = null;
+                            }
+
+                            // Eksekusi Penyelesaian Transaksi Otomatis
+                            await finalizeQrisTransaction(strukNo);
+                        }
+                    }
+                )
+                .subscribe();
+        }
+
+        async function finalizeQrisTransaction(strukNo) {
+            try {
+                // 1. Simpan Detail Item & Potong Stok Per Cabang
                 for (let item of cart) {
                     await supabaseClient.from('detail_transaksi').insert([{
-                        transaksi_id: currentNo,
+                        transaksi_id: strukNo,
                         menu_id: item.id,
                         nama_menu: item.name,
                         qty: item.qty,
@@ -983,7 +1193,6 @@
                         subtotal_item: item.price * item.qty
                     }]);
 
-                    // Query potong stok cabang
                     const { data: stokData } = await supabaseClient
                         .from('stok_cabang')
                         .select('stok')
@@ -1003,8 +1212,176 @@
 
                 playAudio('chime');
 
+                // 2. Update Banner Sukses & Tutup Modal QRIS
+                const banner = document.getElementById('qrisStatusBanner');
+                if (banner) {
+                    banner.className = 'pt-1 flex items-center justify-center space-x-2 text-xs font-bold text-emerald-700';
+                    banner.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 animate-bounce"></i><span>Pembayaran Berhasil Terverifikasi!</span>`;
+                }
+
+                setTimeout(() => {
+                    document.getElementById('qrisModal').classList.add('hidden');
+                }, 400);
+
+                // 3. Persiapkan Data & Tampilkan Struk Thermal
+                let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+                const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+                let tax = Math.round(subtotal * taxPct);
+                let total = subtotal + tax;
+                const metaVal = document.getElementById('customerMetaInput').value.trim() || 'Dine-In';
+
+                const savedFooter = localStorage.getItem('receiptFooter') || DEFAULT_FOOTER;
+                const footerEl = document.getElementById('modalReceiptFooter');
+                if (footerEl) footerEl.innerText = savedFooter;
+
+                document.getElementById('modalStrukNo').innerText = strukNo;
+                document.getElementById('modalStrukMethod').innerText = 'QRIS (ID1026633054444)';
+                document.getElementById('modalStrukMeta').innerText = metaVal;
+                document.getElementById('modalReceiptSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+                document.getElementById('modalReceiptTax').innerText = `Rp ${tax.toLocaleString('id-ID')}`;
+                document.getElementById('modalReceiptTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+
+                const listContainer = document.getElementById('modalItemList');
+                listContainer.innerHTML = '';
+                cart.forEach(item => {
+                    listContainer.innerHTML += `
+                        <div class="flex justify-between">
+                            <span>${item.qty}x ${item.name}</span>
+                            <span class="font-medium">Rp ${(item.qty * item.price).toLocaleString('id-ID')}</span>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('strukModal').classList.remove('hidden');
+
+                // 4. Bersihkan Form & Generate Nomor Struk Baru
+                cart = [];
+                document.getElementById('customerMetaInput').value = '';
+                document.getElementById('cashAmountInput').value = '';
+                document.getElementById('currentStrukNo').innerText = generateStrukNo();
+                renderCart();
+                loadMenuFromSupabase();
+
+                showToast('Pembayaran QRIS Berhasil Terverifikasi Real-Time!', 'success');
+
+            } catch (err) {
+                showToast('Gagal memproses transaksi QRIS: ' + err.message, 'danger');
+            }
+        }
+
+        function closeQrisModal() {
+            playAudio('click');
+            if (qrisRealtimeChannel) {
+                supabaseClient.removeChannel(qrisRealtimeChannel);
+                qrisRealtimeChannel = null;
+            }
+            document.getElementById('qrisModal').classList.add('hidden');
+        }
+
+        async function confirmPaymentAndPrint() {
+            if (cart.length === 0) {
+                showToast('Pilih menu terlebih dahulu!', 'danger');
+                return;
+            }
+
+            let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+            let tax = Math.round(subtotal * taxPct);
+            let total = subtotal + tax;
+
+            if (selectedPaymentMethod === 'Cash') {
+                let cashVal = parseFloat(document.getElementById('cashAmountInput').value) || 0;
+                if (cashVal < total) {
+                    showToast('Uang tunai diterima kurang dari total bayar!', 'danger');
+                    return;
+                }
+                saveTransactionToSupabase();
+            } else if (selectedPaymentMethod === 'QRIS') {
+                openQrisModal();
+            }
+        }
+
+        async function processQrisSuccess() {
+            // Dipanggil jika kasir menekan tombol "Konfirmasi Lunas" secara manual
+            const currentNo = document.getElementById('currentStrukNo').innerText;
+            
+            // Perbarui status transaksi di Supabase menjadi LUNAS.
+            // Langkah ini akan memicu Realtime listener di atas secara otomatis.
+            const { error } = await supabaseClient
+                .from('transaksi')
+                .update({ status: 'LUNAS' })
+                .eq('id', currentNo);
+
+            if (error) {
+                showToast('Gagal memperbarui status: ' + error.message, 'danger');
+            }
+        }
+
+        async function saveTransactionToSupabase() {
+            // Khusus untuk Transaksi Tunai (Cash)
+            let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            const taxPct = parseFloat(localStorage.getItem('taxRate') || 10) / 100;
+            let tax = Math.round(subtotal * taxPct);
+            let total = subtotal + tax;
+
+            const currentNo = document.getElementById('currentStrukNo').innerText;
+            const metaVal = document.getElementById('customerMetaInput').value.trim() || 'Dine-In';
+            const orderType = document.getElementById('orderTypeSelect').value;
+
+            try {
+                // 1. Simpan Header Transaksi Tunai LUNAS
+                const { error: txError } = await supabaseClient.from('transaksi').insert([{
+                    id: currentNo,
+                    cabang_id: userSession.cabang,
+                    kasir_nama: userSession.nama,
+                    user_id: userSession.id || null,
+                    tipe_pesanan: orderType,
+                    customer_meta: metaVal,
+                    metode_bayar: 'Cash',
+                    subtotal: subtotal,
+                    pajak: tax,
+                    total_bayar: total,
+                    status: 'LUNAS'
+                }]);
+
+                if (txError) throw txError;
+
+                // 2. Detail Item & Potong Stok
+                for (let item of cart) {
+                    await supabaseClient.from('detail_transaksi').insert([{
+                        transaksi_id: currentNo,
+                        menu_id: item.id,
+                        nama_menu: item.name,
+                        qty: item.qty,
+                        harga_satuan: item.price,
+                        subtotal_item: item.price * item.qty
+                    }]);
+
+                    const { data: stokData } = await supabaseClient
+                        .from('stok_cabang')
+                        .select('stok')
+                        .ilike('cabang_id', `%${userSession.cabang}%`)
+                        .eq('menu_id', item.id)
+                        .maybeSingle();
+
+                    if (stokData) {
+                        const sisaStok = Math.max(0, stokData.stok - item.qty);
+                        await supabaseClient
+                            .from('stok_cabang')
+                            .update({ stok: sisaStok })
+                            .ilike('cabang_id', `%${userSession.cabang}%`)
+                            .eq('menu_id', item.id);
+                    }
+                }
+
+                playAudio('chime');
+
+                const savedFooter = localStorage.getItem('receiptFooter') || DEFAULT_FOOTER;
+                const footerEl = document.getElementById('modalReceiptFooter');
+                if (footerEl) footerEl.innerText = savedFooter;
+
                 document.getElementById('modalStrukNo').innerText = currentNo;
-                document.getElementById('modalStrukMethod').innerText = selectedPaymentMethod;
+                document.getElementById('modalStrukMethod').innerText = 'Tunai';
                 document.getElementById('modalStrukMeta').innerText = metaVal;
                 document.getElementById('modalReceiptSubtotal').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
                 document.getElementById('modalReceiptTax').innerText = `Rp ${tax.toLocaleString('id-ID')}`;
@@ -1027,11 +1404,10 @@
                 document.getElementById('customerMetaInput').value = '';
                 document.getElementById('cashAmountInput').value = '';
                 
-                // Setel ulang nomor struk ke nomor unik baru & re-fetch stok
                 document.getElementById('currentStrukNo').innerText = generateStrukNo();
                 renderCart();
                 loadMenuFromSupabase();
-                showToast('Pembayaran Berhasil & Terhubung ke DB Pusat!', 'success');
+                showToast('Pembayaran Tunai Berhasil Disimpan!', 'success');
 
             } catch (err) {
                 showToast('Gagal menyimpan transaksi: ' + err.message, 'danger');
@@ -1056,20 +1432,16 @@
                 .channel('realtime-stok-kasir')
                 .on(
                     'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'stok_cabang'
-                    },
-                    (payload) => {
-                        loadMenuFromSupabase();
-                    }
+                    { event: '*', schema: 'public', table: 'stok_cabang' },
+                    () => loadMenuFromSupabase()
                 )
                 .subscribe();
         }
 
         window.onload = function() {
             loadUserProfile();
+            fetchSettingsFromSupabase();
+            initRealtimeSettings();
             loadMenuFromSupabase();
             initRealtimeStock();
             switchPaymentMethod('Cash');

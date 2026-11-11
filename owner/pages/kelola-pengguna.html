@@ -9,6 +9,9 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase SDK Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,9 +184,8 @@
                     Executive Owner
                 </span>
                 
-                <!-- KODE BARU (Menggunakan fungsi handleLogout) -->
                 <button onclick="handleLogout()" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm cursor-pointer">
-                <span>Keluar</span>
+                    <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
                 </button>
             </div>
@@ -229,8 +231,8 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div>
                         <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Total Akun Pengguna</span>
-                        <h4 id="userTotalCount" class="text-2xl font-black text-gray-900">5 Akun</h4>
-                        <p id="userTotalSubtext" class="text-[11px] text-gray-400 mt-1">Terdaftar dalam sistem</p>
+                        <h4 id="userTotalCount" class="text-2xl font-black text-gray-900">0 Akun</h4>
+                        <p class="text-[11px] text-gray-400 mt-1">Terdaftar dalam database cloud</p>
                     </div>
                     <div class="w-11 h-11 rounded-2xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-xl shadow-inner border border-maroon-100">
                         <i class="fa-solid fa-users"></i>
@@ -241,8 +243,8 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div>
                         <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Manajer Cabang</span>
-                        <h4 id="userManagerCount" class="text-2xl font-black text-gray-900">2 Orang</h4>
-                        <p id="userManagerSubtext" class="text-[11px] text-gray-400 mt-1">Penanggung jawab outlet</p>
+                        <h4 id="userManagerCount" class="text-2xl font-black text-gray-900">0 Orang</h4>
+                        <p class="text-[11px] text-gray-400 mt-1">Penanggung jawab outlet</p>
                     </div>
                     <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl shadow-inner border border-amber-100">
                         <i class="fa-solid fa-user-tie"></i>
@@ -253,8 +255,8 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div>
                         <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Kasir Aktif</span>
-                        <h4 id="userKasirCount" class="text-2xl font-black text-gray-900">2 Orang</h4>
-                        <p id="userKasirSubtext" class="text-[11px] text-gray-400 mt-1">Petugas POS transaksi</p>
+                        <h4 id="userKasirCount" class="text-2xl font-black text-gray-900">0 Orang</h4>
+                        <p class="text-[11px] text-gray-400 mt-1">Petugas POS transaksi</p>
                     </div>
                     <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl shadow-inner border border-emerald-100">
                         <i class="fa-solid fa-cash-register"></i>
@@ -282,7 +284,7 @@
                             <input type="text" id="searchInput" onkeyup="filterUsers()" placeholder="Cari nama, email, peran..." class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 focus:outline-none">
                         </div>
 
-                        <button onclick="openUserModal()" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm border border-maroon-700">
+                        <button onclick="openUserModal()" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm border border-maroon-700 cursor-pointer">
                             <i class="fa-solid fa-user-plus text-amber-300"></i>
                             <span>Tambah Pengguna Baru</span>
                         </button>
@@ -302,7 +304,7 @@
                             </tr>
                         </thead>
                         <tbody id="userTableBody" class="divide-y divide-gray-200">
-                            <!-- Rows generated by Javascript -->
+                            <!-- Dynamic Content generated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -340,6 +342,11 @@
                     <input type="email" id="inputUserEmail" required placeholder="dian.kasir@coffeclubrs.id" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 font-medium text-gray-800">
                 </div>
 
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Password / PIN Akses</label>
+                    <input type="password" id="inputUserPassword" required placeholder="Masukkan password/PIN login..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 font-medium text-gray-800">
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Peran (Role)</label>
@@ -361,8 +368,8 @@
                 </div>
 
                 <div class="pt-3 flex gap-2">
-                    <button type="button" onclick="closeUserModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors">Batal</button>
-                    <button type="submit" class="w-full py-2.5 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold rounded-xl transition-colors shadow-md flex items-center justify-center space-x-1.5">
+                    <button type="button" onclick="closeUserModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors cursor-pointer">Batal</button>
+                    <button type="submit" id="saveUserSubmitBtn" class="w-full py-2.5 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 text-xs font-bold rounded-xl transition-colors shadow-md flex items-center justify-center space-x-1.5 cursor-pointer">
                         <i class="fa-solid fa-floppy-disk text-amber-300"></i>
                         <span>Simpan Akun</span>
                     </button>
@@ -375,13 +382,17 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script>
+        // Supabase Client Setup
+        const SUPABASE_URL = 'https://vkyqddubwyabbbeegqlj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let audioMuted = false;
         let audioCtx = null;
+        let usersList = [];
 
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             return audioCtx;
         }
 
@@ -444,14 +455,6 @@
             }
         }
 
-        let usersList = [
-            { id: 1, name: "Mr. Rifki", email: "rifki@coffeclubrs.id", role: "Owner", branch: "Semua Cabang", branchKey: "all", status: "Aktif" },
-            { id: 2, name: "Andi Wijaya", email: "andi.senopati@coffeclubrs.id", role: "Manager", branch: "Cabang Senopati", branchKey: "senopati", status: "Aktif" },
-            { id: 3, name: "Sarah Amelia", email: "sarah.kasir@coffeclubrs.id", role: "Kasir", branch: "Cabang Senopati", branchKey: "senopati", status: "Aktif" },
-            { id: 4, name: "Budi Santoso", email: "budi.kasir@coffeclubrs.id", role: "Kasir", branch: "Cabang Kemang", branchKey: "kemang", status: "Aktif" },
-            { id: 5, name: "Dewi Lestari", email: "dewi.kemang@coffeclubrs.id", role: "Manager", branch: "Cabang Kemang", branchKey: "kemang", status: "Aktif" }
-        ];
-
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -465,21 +468,66 @@
             toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
             
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
+        // Fetch Data Pengguna dari Supabase
+        async function fetchUsersFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    usersList = data.map(u => ({
+                        id: u.id,
+                        name: u.nama || 'Tanpa Nama',
+                        email: u.email || '',
+                        role: (u.role || 'Kasir').charAt(0).toUpperCase() + (u.role || 'Kasir').slice(1),
+                        branch: u.cabang_id === 'all' ? 'Semua Cabang' : `Cabang ${u.cabang_id.charAt(0).toUpperCase() + u.cabang_id.slice(1)}`,
+                        branchKey: u.cabang_id || 'all',
+                        status: (u.status || 'aktif').charAt(0).toUpperCase() + (u.status || 'aktif').slice(1)
+                    }));
+                } else {
+                    usersList = [];
+                }
+                filterUsers();
+            } catch (err) {
+                console.error("Gagal memuat pengguna dari Supabase:", err);
+                showToast("Gagal memuat daftar pengguna dari database.", "danger");
+            }
+        }
+
+        // Listener Real-time Supabase untuk Tabel users
+        function initRealtimeUsers() {
+            supabaseClient
+                .channel('realtime-users-channel')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table: 'users'
+                    },
+                    (payload) => {
+                        fetchUsersFromSupabase();
+                    }
+                )
+                .subscribe();
+        }
+
         function renderUserTable(data) {
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = '';
 
-            if(data.length === 0) {
+            if(!data || data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400 italic">Tidak ada pengguna yang ditemukan.</td></tr>`;
                 return;
             }
@@ -517,7 +565,7 @@
                             </span>
                         </td>
                         <td class="px-5 py-3.5 text-center whitespace-nowrap">
-                            <button onclick="deleteUser(${user.id})" class="px-2.5 py-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-700 rounded-lg border border-red-200 transition-all flex items-center space-x-1 mx-auto">
+                            <button onclick="deleteUser('${user.id}', '${user.name}')" class="px-2.5 py-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-700 rounded-lg border border-red-200 transition-all flex items-center space-x-1 mx-auto cursor-pointer">
                                 <i class="fa-solid fa-trash-can"></i>
                                 <span>Hapus</span>
                             </button>
@@ -575,13 +623,9 @@
                 );
             }
 
-            const totalCount = filtered.length;
-            const managerCount = filtered.filter(u => u.role === 'Manager').length;
-            const kasirCount = filtered.filter(u => u.role === 'Kasir').length;
-
-            document.getElementById('userTotalCount').innerText = `${totalCount} Akun`;
-            document.getElementById('userManagerCount').innerText = `${managerCount} Orang`;
-            document.getElementById('userKasirCount').innerText = `${kasirCount} Orang`;
+            document.getElementById('userTotalCount').innerText = `${filtered.length} Akun`;
+            document.getElementById('userManagerCount').innerText = `${filtered.filter(u => u.role === 'Manager').length} Orang`;
+            document.getElementById('userKasirCount').innerText = `${filtered.filter(u => u.role === 'Kasir').length} Orang`;
 
             renderUserTable(filtered);
         }
@@ -596,12 +640,20 @@
             document.getElementById('userModal').classList.add('hidden');
         }
 
-        function saveUser(e) {
+        // Fungsi Simpan Pengguna Baru ke Supabase Auth & Tabel Users (Menggunakan Upsert)
+        async function saveUser(e) {
             e.preventDefault();
             playAudio('chime');
             
-            const name = document.getElementById('inputUserName').value;
-            const email = document.getElementById('inputUserEmail').value;
+            const submitBtn = document.getElementById('saveUserSubmitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Menyimpan...</span>`;
+            }
+
+            const name = document.getElementById('inputUserName').value.trim();
+            const email = document.getElementById('inputUserEmail').value.trim();
+            const password = document.getElementById('inputUserPassword').value.trim();
             const role = document.getElementById('inputUserRole').value;
             const branch = document.getElementById('inputUserBranch').value;
 
@@ -609,35 +661,98 @@
             if (branch === 'Cabang Senopati') branchKey = 'senopati';
             if (branch === 'Cabang Kemang') branchKey = 'kemang';
 
-            const newUser = {
-                id: Date.now(),
-                name,
-                email,
-                role,
-                branch,
-                branchKey,
-                status: 'Aktif'
-            };
+            try {
+                // 1. Buat client Supabase sekunder (agar sesi login Owner saat ini TIDAK ter-logout)
+                const tempSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: { persistSession: false }
+                });
 
-            usersList.push(newUser);
-            closeUserModal();
+                // 2. Daftarkan akun ke Supabase Auth Users (Engine Login)
+                const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            role: role.toLowerCase(),
+                            cabang_id: branchKey
+                        }
+                    }
+                });
 
-            document.getElementById('inputUserName').value = '';
-            document.getElementById('inputUserEmail').value = '';
-            document.getElementById('inputUserRole').value = 'Kasir';
+                // Jika user sudah pernah terdaftar di Auth, kita dapatkan user ID darinya
+                if (authError && !authError.message.includes('already registered')) {
+                    throw authError;
+                }
 
-            filterUsers();
-            showToast(`Akun pengguna ${name} berhasil ditambahkan!`, 'success');
+                const userId = authData?.user?.id;
+                if (!userId) {
+                    throw new Error("Gagal mendaftarkan akun di Supabase Auth Users.");
+                }
+
+                // 3. Masukkan data ke tabel publik 'users' di Supabase menggunakan UPSERT
+                const userPayload = {
+                    id: userId,
+                    nama: name,
+                    email: email,
+                    password: password,
+                    role: role.toLowerCase(),
+                    cabang_id: branchKey,
+                    status: 'aktif'
+                };
+
+                const { error: dbError } = await supabaseClient
+                    .from('users')
+                    .upsert([userPayload], { onConflict: 'id' });
+
+                if (dbError) throw dbError;
+
+                closeUserModal();
+                document.getElementById('inputUserName').value = '';
+                document.getElementById('inputUserEmail').value = '';
+                document.getElementById('inputUserPassword').value = '';
+                
+                fetchUsersFromSupabase();
+                showToast(`Akun ${name} (${email}) berhasil didaftarkan dan siap untuk login!`, 'success');
+            } catch (err) {
+                console.error("Gagal simpan user:", err);
+                showToast("Gagal menyimpan akun: " + err.message, "danger");
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<i class="fa-solid fa-floppy-disk text-amber-300"></i><span>Simpan Akun</span>`;
+                }
+            }
         }
 
-        function deleteUser(id) {
+        // Fungsi Hapus Pengguna dari Database Supabase & Supabase Auth Engine
+        async function deleteUser(id, name) {
             playAudio('danger');
-            const user = usersList.find(u => u.id === id);
-            const userName = user ? user.name : 'Pengguna';
-            
-            usersList = usersList.filter(u => u.id !== id);
-            filterUsers();
-            showToast(`Akun ${userName} berhasil dihapus dari sistem`, 'danger');
+            if (!confirm(`Yakin ingin menghapus pengguna "${name}" secara permanen dari sistem & akses login?`)) return;
+
+            try {
+                // 1. Eksekusi hapus otomatis via fungsi SQL RPC (Menghapus dari public.users & auth.users)
+                const { error: rpcError } = await supabaseClient.rpc('delete_user_complete', {
+                    target_user_id: id
+                });
+
+                // 2. Fallback: Jika fungsi RPC belum dipasang di SQL Editor, hapus dari tabel users publik
+                if (rpcError) {
+                    console.warn("Fungsi RPC delete_user_complete belum dipasang atau error. Melakukan hapus langsung dari tabel users:", rpcError.message);
+                    const { error: dbError } = await supabaseClient
+                        .from('users')
+                        .delete()
+                        .eq('id', id);
+
+                    if (dbError) throw dbError;
+                }
+
+                await fetchUsersFromSupabase();
+                showToast(`Akun ${name} berhasil dihapus dari sistem & database Auth!`, 'danger');
+            } catch (err) {
+                console.error("Gagal menghapus user:", err);
+                showToast("Gagal menghapus user: " + err.message, "danger");
+            }
         }
 
         window.onload = function() {
@@ -646,6 +761,8 @@
             if (filterSelect) {
                 filterSelect.value = savedBranch;
             }
+            fetchUsersFromSupabase();
+            initRealtimeUsers();
             filterBranchData();
         };
     </script>

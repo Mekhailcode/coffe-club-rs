@@ -247,7 +247,7 @@
                     <button 
                         type="submit" 
                         id="submitBtn"
-                        class="w-full bg-gradient-to-r from-maroon-vintage via-maroon-accent to-maroon-deep hover:from-maroon-deep hover:to-maroon-vintage text-amber-100 font-bold py-4 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2 text-xs tracking-wider uppercase border border-maroon-600/40 mt-4 group"
+                        class="w-full bg-gradient-to-r from-maroon-vintage via-maroon-accent to-maroon-deep hover:from-maroon-deep hover:to-maroon-vintage text-amber-100 font-bold py-4 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2 text-xs tracking-wider uppercase border border-maroon-600/40 mt-4 group cursor-pointer"
                     >
                         <span id="btnText">Masuk Ke Dashboard</span>
                         <i id="btnIcon" class="fa-solid fa-arrow-right text-amber-300 transform group-hover:translate-x-1.5 transition-transform duration-200"></i>
@@ -271,43 +271,15 @@
         </p>
     </footer>
 
-    <!-- MODAL SUKSES LOGIN -->
-    <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-opacity duration-300">
-        <div class="bg-cardBg rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center border border-maroon-900/40 transform scale-95 transition-all duration-300 relative space-y-4">
-            
-            <div id="modalIconBg" class="w-16 h-16 bg-maroon-100 text-maroon-700 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-maroon-200 animate-bounce">
-                <i id="modalIcon" class="fa-solid fa-user-shield"></i>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-extrabold text-gray-900" id="modalTitle">Login Berhasil!</h3>
-                <p class="text-xs text-gray-600 mt-2 leading-relaxed" id="modalMessage">Mengarahkan ke dashboard sistem...</p>
-            </div>
-            
-            <div class="pt-2">
-                <button 
-                    id="modalRedirectBtn"
-                    onclick="proceedRedirect()" 
-                    class="w-full py-3.5 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 rounded-full text-xs font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
-                >
-                    <span>Lanjutkan ke Dashboard</span>
-                    <i class="fa-solid fa-arrow-right text-amber-300"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-<script>
+    <script>
         // ==========================================
-        // 1. KONFIGURASI SUPABASE CLIENT (SUDAH DIPERBAIKI)
+        // 1. KONFIGURASI SUPABASE CLIENT
         // ==========================================
         const SUPABASE_URL = 'https://vkyqddubwyabbbeegqlj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
         
-        // Memakai 'supabaseClient' agar tidak konflik dengan library 'supabase'
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let targetRedirectUrl = "index.html";
         let audioEnabled = true;
         let audioCtx = null;
 
@@ -398,7 +370,7 @@
         }
 
         // ==========================================
-        // 2. LOGIKA LOGIN & PEMERIKSAAN ROLE SUPABASE
+        // 2. LOGIKA LOGIN & DIRECT REDIRECT SUPABASE
         // ==========================================
         async function handleLogin(event) {
             event.preventDefault();
@@ -410,18 +382,16 @@
             const btnText = document.getElementById('btnText');
             const btnIcon = document.getElementById('btnIcon');
             
-            // Indikator Loading Button
             btnText.innerText = "Verifikasi...";
             btnIcon.className = "fa-solid fa-spinner fa-spin text-amber-300";
 
             try {
-                // Formatting email jika input hanya berupa username
                 let emailToLogin = userInput;
                 if (!userInput.includes('@')) {
                     emailToLogin = `${userInput.toLowerCase()}@coffeclub.com`;
                 }
 
-                // A. Login ke Supabase Auth
+                // A. Authenticate via Supabase Auth Engine
                 const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
                     email: emailToLogin,
                     password: passwordInput,
@@ -433,65 +403,69 @@
 
                 const userId = authData.user.id;
 
-                // B. Ambil Profil dan Role dari Tabel 'profiles'
-                const { data: profile, error: profileError } = await supabaseClient
-                    .from('profiles')
+                // B. Query Profil User dari Database Publik
+                let { data: profile } = await supabaseClient
+                    .from('users')
                     .select('*')
                     .eq('id', userId)
-                    .single();
+                    .maybeSingle();
 
-                if (profileError || !profile) {
-                    throw new Error("Profil pengguna tidak ditemukan di database.");
+                if (!profile) {
+                    const { data: profileByEmail } = await supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('email', emailToLogin)
+                        .maybeSingle();
+                    profile = profileByEmail;
                 }
+
+                // Metadata Fallback
+                const meta = authData.user.user_metadata || {};
+                const rawRole = (profile?.role || meta.role || 'kasir').toLowerCase();
+                const namaUser = profile?.nama || profile?.nama_lengkap || meta.full_name || emailToLogin.split('@')[0];
+                const cabangUser = profile?.cabang_id || meta.cabang_id || 'all';
 
                 playSynthesizedSound('success');
 
-                // Simpan data sesi pengguna ke localStorage
-                localStorage.setItem('user_session', JSON.stringify({
+                // C. Simpan Session Object Lengkap Menggunakan sessionStorage (Per-Tab Storage)
+                const sessionObject = {
                     id: userId,
-                    nama: profile.nama_lengkap,
-                    username: profile.username,
-                    role: profile.role,
-                    cabang: profile.cabang_id
-                }));
+                    nama: namaUser,
+                    nama_lengkap: namaUser,
+                    email: emailToLogin,
+                    username: profile?.email || emailToLogin,
+                    role: rawRole,
+                    peran: rawRole,
+                    cabang: cabangUser,
+                    cabang_id: cabangUser
+                };
+                sessionStorage.setItem('user_session', JSON.stringify(sessionObject));
 
-                // C. Tentukan Halaman Tujuan Berdasarkan Role
-                let roleLabel = "";
-                if (profile.role === 'owner') {
-                roleLabel = "Executive Owner";
-                targetRedirectUrl = "../owner/pages/dashboard.html";
-                } else if (profile.role === 'kepala_cabang') {
-                roleLabel = `Manajer Cabang (${profile.cabang_id})`;
-                targetRedirectUrl = "../kepala-cabang/pages/dashboard.html";
-                } else if (profile.role === 'kasir') {
-                roleLabel = `Petugas Kasir POS (${profile.cabang_id})`;
-                targetRedirectUrl = "../kasir/pages/kasir-pos.html";
-                } else {
-                roleLabel = profile.nama_lengkap;
-                targetRedirectUrl = "login.html";
+                // D. Penentuan Rute Dasbor Tujuan
+                let targetRedirectUrl = "../kasir/pages/kasir-pos.html";
+                if (rawRole === 'owner') {
+                    targetRedirectUrl = "../owner/pages/dashboard.html";
+                } else if (rawRole === 'manager' || rawRole === 'kepala_cabang' || rawRole === 'kepala cabang') {
+                    targetRedirectUrl = "../kepala-cabang/pages/dashboard.html";
+                } else if (rawRole === 'kasir') {
+                    targetRedirectUrl = "../kasir/pages/kasir-pos.html";
                 }
 
-                // D. Tampilkan Modal Sukses
-                document.getElementById('modalTitle').innerText = `Otorisasi Berhasil!`;
-                document.getElementById('modalMessage').innerHTML = `Selamat datang kembali, <strong>${profile.nama_lengkap}</strong>.<br>Akses Terverifikasi: <span class="text-maroon-700 font-bold">${roleLabel}</span>.<br><span class="text-[11px] text-gray-500 mt-2 block">Klik tombol di bawah untuk membuka dasbor.</span>`;
-                
-                const modal = document.getElementById('loginModal');
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                btnText.innerText = "Mengalihkan...";
+                btnIcon.className = "fa-solid fa-circle-notch fa-spin text-amber-300";
+
+                // E. Navigasi Langsung
+                setTimeout(() => {
+                    window.location.href = targetRedirectUrl;
+                }, 200);
 
             } catch (err) {
+                console.error("Login Error:", err);
                 showError(err.message || "Gagal melakukan verifikasi akun.");
-            } finally {
                 btnText.innerText = "Masuk Ke Dashboard";
                 btnIcon.className = "fa-solid fa-arrow-right text-amber-300 transform group-hover:translate-x-1.5 transition-transform duration-200";
             }
         }
-
-        function proceedRedirect() {
-            playSynthesizedSound('click');
-            // Menimpa riwayat history login dengan halaman dashboard tujuan
-            window.location.replace(targetRedirectUrl);
-}
 
         function initParticles() {
             const canvas = document.getElementById('particleCanvas');

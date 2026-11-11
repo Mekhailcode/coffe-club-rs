@@ -9,6 +9,9 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase SDK Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,7 +192,6 @@
                     Executive Owner
                 </span>
                 
-                <!-- KODE BARU (Menggunakan fungsi handleLogout) -->
                 <button onclick="handleLogout()" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm cursor-pointer">
                 <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
@@ -212,7 +214,7 @@
                         </h3>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">
-                        Rekap total pendapatan dan rincian pemasukan kasir berdasarkan kanal Cash, QRIS, dan Debit.
+                        Rekap total pendapatan dan rincian pemasukan kasir berdasarkan kanal Cash dan QRIS.
                     </p>
                 </div>
 
@@ -235,8 +237,8 @@
                 </div>
             </div>
 
-            <!-- Top Summary Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Top Summary Cards (Disesuaikan Menjadi 3 Card Sesuai Sistem Cash & QRIS) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 
                 <!-- Total Pendapatan -->
                 <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between glow-card">
@@ -246,7 +248,7 @@
                                 Total Pendapatan Hari Ini
                             </span>
                             <h4 id="summaryTotal" class="text-2xl font-black text-amber-50 tracking-tight">
-                                Rp 838.000
+                                Rp 0
                             </h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center text-lg">
@@ -254,7 +256,7 @@
                         </div>
                     </div>
                     <p id="summaryTotalCount" class="text-[11px] text-amber-200/70 mt-3 font-medium">
-                        Dari 9 transaksi kasir
+                        Dari 0 transaksi kasir
                     </p>
                 </div>
 
@@ -267,7 +269,7 @@
                                 Pemasukan Tunai (Cash)
                             </span>
                             <h4 id="summaryCash" class="text-2xl font-black text-gray-900 tracking-tight">
-                                Rp 356.000
+                                Rp 0
                             </h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg">
@@ -275,7 +277,7 @@
                         </div>
                     </div>
                     <p id="summaryCashCount" class="text-[11px] text-gray-400 mt-3 font-medium">
-                        4 transaksi tunai
+                        0 transaksi tunai
                     </p>
                 </div>
 
@@ -288,7 +290,7 @@
                                 Pemasukan QRIS
                             </span>
                             <h4 id="summaryQris" class="text-2xl font-black text-gray-900 tracking-tight">
-                                Rp 314.000
+                                Rp 0
                             </h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg">
@@ -296,28 +298,7 @@
                         </div>
                     </div>
                     <p id="summaryQrisCount" class="text-[11px] text-gray-400 mt-3 font-medium">
-                        3 transaksi QRIS
-                    </p>
-                </div>
-
-                <!-- Debit -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 glow-card flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                                Pemasukan Kartu Debit
-                            </span>
-                            <h4 id="summaryDebit" class="text-2xl font-black text-gray-900 tracking-tight">
-                                Rp 168.000
-                            </h4>
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg">
-                            <i class="fa-solid fa-credit-card"></i>
-                        </div>
-                    </div>
-                    <p id="summaryDebitCount" class="text-[11px] text-gray-400 mt-3 font-medium">
-                        2 transaksi kartu EDC
+                        0 transaksi QRIS
                     </p>
                 </div>
 
@@ -343,11 +324,11 @@
                             <input type="text" id="searchInput" onkeyup="filterTransactions()" placeholder="Cari no struk, kasir, item..." class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 focus:outline-none">
                         </div>
 
+                        <!-- Dropdown Metode Bayar Hanya Cash & QRIS -->
                         <select id="filterMethod" onchange="filterTransactions()" class="w-full sm:w-auto px-3 py-2 text-xs bg-white border border-gray-300 rounded-xl focus:ring-maroon-700 focus:border-maroon-700 font-semibold text-gray-700 focus:outline-none cursor-pointer">
                             <option value="all">Semua Pembayaran</option>
                             <option value="Cash">Tunai (Cash)</option>
                             <option value="QRIS">QRIS</option>
-                            <option value="Debit">Debit EDC</option>
                         </select>
                     </div>
                 </div>
@@ -394,10 +375,10 @@
 
             <!-- Receipt Meta -->
             <div class="text-xs text-gray-600 space-y-1 border-b border-dashed border-gray-300 pb-3">
-                <div class="flex justify-between"><span class="text-gray-400">No. Struk:</span><span id="modalStrukNo" class="font-bold text-gray-800">CC-2610-001</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Waktu:</span><span id="modalStrukTime" class="font-medium">2026-10-10 14:32 WIB</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Kasir:</span><span id="modalStrukKasir" class="font-medium">Sarah Amelia</span></div>
-                <div class="flex justify-between"><span class="text-gray-400">Metode Bayar:</span><span id="modalStrukMethod" class="font-bold text-maroon-700">QRIS</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">No. Struk:</span><span id="modalStrukNo" class="font-bold text-gray-800">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Waktu:</span><span id="modalStrukTime" class="font-medium">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Kasir:</span><span id="modalStrukKasir" class="font-medium">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Metode Bayar:</span><span id="modalStrukMethod" class="font-bold text-maroon-700">--</span></div>
             </div>
 
             <!-- Item List -->
@@ -407,9 +388,9 @@
 
             <!-- Total Calculation -->
             <div class="text-xs space-y-1.5">
-                <div class="flex justify-between text-gray-600"><span>Subtotal:</span><span id="modalSubtotal" class="font-semibold">Rp 70.000</span></div>
+                <div class="flex justify-between text-gray-600"><span>Subtotal:</span><span id="modalSubtotal" class="font-semibold">Rp 0</span></div>
                 <div class="flex justify-between text-gray-600"><span>Pajak PB1 (10%):</span><span class="font-semibold">Termasuk</span></div>
-                <div class="flex justify-between text-sm font-black text-gray-900 pt-2 border-t border-gray-200"><span>TOTAL PAS:</span><span id="modalTotal" class="text-maroon-700">Rp 70.000</span></div>
+                <div class="flex justify-between text-sm font-black text-gray-900 pt-2 border-t border-gray-200"><span>TOTAL PAS:</span><span id="modalTotal" class="text-maroon-700">Rp 0</span></div>
             </div>
 
             <!-- Modal Actions -->
@@ -427,13 +408,17 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script>
+        // Supabase Client Setup
+        const SUPABASE_URL = 'https://vkyqddubwyabbbeegqlj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let audioMuted = false;
         let audioCtx = null;
+        let transactions = [];
 
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             return audioCtx;
         }
 
@@ -499,21 +484,9 @@
             }
         }
 
-        const transactions = [
-            { id: "CC-2610-001", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 14:32 WIB", cashier: "Sarah Amelia", items: "2x Kopi Susu Coffe Club, 1x Artisan Butter Croissant", rawItems: [{name:"Kopi Susu Coffe Club", qty:2, price:25000}, {name:"Artisan Butter Croissant", qty:1, price:20000}], method: "QRIS", amount: 70000 },
-            { id: "CC-2610-002", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 14:45 WIB", cashier: "Sarah Amelia", items: "1x Caramel Macchiato Oat, 1x Nasi Gila Senopati", rawItems: [{name:"Caramel Macchiato Oat", qty:1, price:38000}, {name:"Nasi Gila Senopati", qty:1, price:30000}], method: "Debit", amount: 68000 },
-            { id: "CC-2610-003", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 15:10 WIB", cashier: "Sarah Amelia", items: "2x Americano Ice Doppio", rawItems: [{name:"Americano Ice Doppio", qty:2, price:24000}], method: "Cash", amount: 48000 },
-            { id: "CC-2610-004", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 15:28 WIB", cashier: "Sarah Amelia", items: "1x Matcha Latte Uji, 1x Pain Au Chocolat", rawItems: [{name:"Matcha Latte Uji", qty:1, price:35000}, {name:"Pain Au Chocolat", qty:1, price:22000}], method: "QRIS", amount: 57000 },
-            { id: "CC-2610-005", branch: "senopati", branchName: "Cabang Senopati", time: "2026-10-10 16:02 WIB", cashier: "Sarah Amelia", items: "2x Spaghetti Aglio Olio, 2x Choco Belgia", rawItems: [{name:"Spaghetti Aglio Olio", qty:2, price:40000}, {name:"Choco Belgia", qty:2, price:25000}], method: "Cash", amount: 130000 },
-            
-            { id: "CC-2610-006", branch: "kemang", branchName: "Cabang Kemang", time: "2026-10-10 14:15 WIB", cashier: "Budi Santoso", items: "3x Cafe Latte Ice, 2x Donut Gula Kemang", rawItems: [{name:"Cafe Latte Ice", qty:3, price:28000}, {name:"Donut Gula Kemang", qty:2, price:12000}], method: "Cash", amount: 108000 },
-            { id: "CC-2610-007", branch: "kemang", branchName: "Cabang Kemang", time: "2026-10-10 15:00 WIB", cashier: "Budi Santoso", items: "2x Flat White, 1x Waffle Ice Cream", rawItems: [{name:"Flat White", qty:2, price:32000}, {name:"Waffle Ice Cream", qty:1, price:35000}], method: "Debit", amount: 99000 },
-            { id: "CC-2610-008", branch: "kemang", branchName: "Cabang Kemang", time: "2026-10-10 15:40 WIB", cashier: "Budi Santoso", items: "1x V60 Manual Brew Flores", rawItems: [{name:"V60 Manual Brew Flores", qty:1, price:32000}], method: "Cash", amount: 32000 },
-            { id: "CC-2610-009", branch: "kemang", branchName: "Cabang Kemang", time: "2026-10-10 16:15 WIB", cashier: "Budi Santoso", items: "4x Kopi Susu Coffe Club, 2x French Fries", rawItems: [{name:"Kopi Susu Coffe Club", qty:4, price:25000}, {name:"French Fries", qty:2, price:23000}], method: "QRIS", amount: 146000 }
-        ];
-
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if(!container) return;
             const toast = document.createElement('div');
             let bgStyle = 'bg-maroon-vintage text-amber-100 border-maroon-700';
             let icon = 'fa-circle-info text-amber-300';
@@ -525,14 +498,53 @@
             toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
             
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        }
+
+        async function fetchOwnerTransactions() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('transaksi')
+                    .select('*, detail_transaksi(*)')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data) {
+                    transactions = data.map(t => {
+                        const rawBranch = t.cabang_id ? t.cabang_id.toString().trim() : 'senopati';
+                        const itemsText = t.detail_transaksi && t.detail_transaksi.length > 0
+                            ? t.detail_transaksi.map(d => `${d.qty}x ${d.nama_menu}`).join(', ')
+                            : 'Menu Variatif';
+
+                        const rawItems = t.detail_transaksi && t.detail_transaksi.length > 0
+                            ? t.detail_transaksi.map(d => ({ name: d.nama_menu, qty: d.qty, price: d.harga_satuan }))
+                            : [];
+
+                        return {
+                            id: t.id,
+                            branch: rawBranch.toLowerCase(),
+                            branchName: `Cabang ${rawBranch.charAt(0).toUpperCase() + rawBranch.slice(1)}`,
+                            time: new Date(t.created_at).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) + ' WIB',
+                            cashier: t.kasir_nama || 'Sarah Amelia',
+                            items: itemsText,
+                            rawItems: rawItems,
+                            method: t.metode_bayar || 'Cash',
+                            amount: parseFloat(t.total_bayar) || 0
+                        };
+                    });
+                } else {
+                    transactions = [];
+                }
+
+                filterBranchData();
+            } catch (err) {
+                console.error("Error Supabase:", err);
+            }
         }
 
         function renderTable(data) {
@@ -545,10 +557,8 @@
             }
 
             data.forEach(item => {
-                let badgeStyle = "bg-maroon-100 text-maroon-900 border-maroon-300 font-bold shadow-sm";
+                let badgeStyle = "bg-amber-100/90 text-amber-950 border-amber-300 font-bold shadow-sm";
                 if(item.method === 'QRIS') badgeStyle = "bg-maroon-100/90 text-maroon-900 border-maroon-300/80 font-bold shadow-sm";
-                if(item.method === 'Cash') badgeStyle = "bg-amber-100/90 text-amber-950 border-amber-300 font-bold shadow-sm";
-                if(item.method === 'Debit') badgeStyle = "bg-rose-100/70 text-maroon-900 border-maroon-200/80 font-bold shadow-sm";
 
                 const row = `
                     <tr class="hover:bg-amber-50/30 transition-colors">
@@ -601,14 +611,13 @@
                 if (tableSubtext) tableSubtext.innerText = 'Daftar struk transaksi kasir di seluruh cabang Coffe Club\'RS';
             }
 
-            let total = 0, cash = 0, qris = 0, debit = 0;
-            let cashCnt = 0, qrisCnt = 0, debitCnt = 0;
+            let total = 0, cash = 0, qris = 0;
+            let cashCnt = 0, qrisCnt = 0;
 
             filtered.forEach(t => {
                 total += t.amount;
                 if(t.method === 'Cash') { cash += t.amount; cashCnt++; }
                 if(t.method === 'QRIS') { qris += t.amount; qrisCnt++; }
-                if(t.method === 'Debit') { debit += t.amount; debitCnt++; }
             });
 
             document.getElementById('summaryTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
@@ -619,9 +628,6 @@
 
             document.getElementById('summaryQris').innerText = `Rp ${qris.toLocaleString('id-ID')}`;
             document.getElementById('summaryQrisCount').innerText = `${qrisCnt} transaksi QRIS`;
-
-            document.getElementById('summaryDebit').innerText = `Rp ${debit.toLocaleString('id-ID')}`;
-            document.getElementById('summaryDebitCount').innerText = `${debitCnt} transaksi kartu EDC`;
 
             filterTransactions();
         }
@@ -666,14 +672,18 @@
 
             const itemListContainer = document.getElementById('modalItemList');
             itemListContainer.innerHTML = '';
-            item.rawItems.forEach(r => {
-                itemListContainer.innerHTML += `
-                    <div class="flex justify-between">
-                        <span>${r.qty}x ${r.name}</span>
-                        <span class="font-medium">Rp ${(r.qty * r.price).toLocaleString('id-ID')}</span>
-                    </div>
-                `;
-            });
+            if (item.rawItems && item.rawItems.length > 0) {
+                item.rawItems.forEach(r => {
+                    itemListContainer.innerHTML += `
+                        <div class="flex justify-between">
+                            <span>${r.qty}x ${r.name}</span>
+                            <span class="font-medium">Rp ${(r.qty * r.price).toLocaleString('id-ID')}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                itemListContainer.innerHTML = `<div class="text-gray-500 italic text-center">${item.items}</div>`;
+            }
 
             document.getElementById('strukModal').classList.remove('hidden');
         }
@@ -690,7 +700,16 @@
 
         function openRekapModal() {
             playAudio('chime');
-            showToast("Rekapitulasi Laporan Penjualan Harian Berhasil Diunduh!", "success");
+            window.print();
+        }
+
+        function initRealtimeSubscription() {
+            supabaseClient
+                .channel('realtime-owner-laporan')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'transaksi' }, () => {
+                    fetchOwnerTransactions();
+                })
+                .subscribe();
         }
 
         window.onload = function() {
@@ -699,7 +718,8 @@
             if (filterSelect) {
                 filterSelect.value = savedBranch;
             }
-            filterBranchData();
+            fetchOwnerTransactions();
+            initRealtimeSubscription();
         };
     </script>
 </body>

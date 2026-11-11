@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Script Route Guard dijalankan paling awal -->
     <script src="../../js/route-guard.js"></script>
-    <title>Coffe Club'RS - Lapor Bug Kepala Cabang</title>
+    <title>Coffe Club'RS - Lapor Bug System Web Kepala Cabang</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -142,7 +142,7 @@
 
                 <a href="lapor-bug.html" onclick="playAudio('click')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-maroon-accent text-amber-100 font-semibold shadow-md border border-maroon-600/30 ambient-glow">
                     <i class="fa-solid fa-bug text-amber-300 text-base"></i>
-                    <span>Lapor Bug / Kendala</span>
+                    <span>Lapor Bug / Kendala Web</span>
                 </a>
             </nav>
         </div>
@@ -196,14 +196,14 @@
                 <div>
                     <div class="flex items-center space-x-2">
                         <span id="bannerBranchBadge" class="px-2.5 py-1 bg-maroon-vintage text-amber-100 font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-sm">
-                            DUKUNGAN IT OUTLET
+                            DUKUNGAN DEVELOPER IT WEB
                         </span>
                         <h3 id="bannerTitle" class="text-base md:text-lg font-bold text-gray-900">
-                            Lapor Bug & Kendala Teknis Cabang
+                            Lapor Bug & Kendala Aplikasi Web — Kepala Cabang
                         </h3>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">
-                        Kirim laporan masalah POS, mesin printer thermal, sinkronisasi stok langsung ke Tim Developer IT.
+                        Kirim laporan error dasbor manager, form input stok web, kegagalan export laporan penjualan, atau sinkronisasi database cloud langsung ke Tim Web Developer.
                     </p>
                 </div>
             </div>
@@ -216,21 +216,21 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-maroon-700"></div>
                     <div class="flex items-start justify-between">
                         <div>
-                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">TIKET DILAPORKAN</span>
+                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">TIKET BUG WEB</span>
                             <h4 id="statBugTotal" class="text-2xl font-black text-gray-900">0 Tiket</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg shadow-inner">
                             <i class="fa-solid fa-ticket"></i>
                         </div>
                     </div>
-                    <p id="statBugTotalSubtext" class="text-[11px] text-gray-400 mt-2 font-medium">Riwayat laporan cabang</p>
+                    <p id="statBugTotalSubtext" class="text-[11px] text-gray-400 mt-2 font-medium">Riwayat bug aplikasi web</p>
                 </div>
 
                 <!-- Card 2: Sedang Diproses Dev -->
                 <div class="bg-gradient-to-br from-maroon-vintage via-maroon-deep to-maroon-vintage rounded-2xl p-5 shadow-md border border-maroon-800 text-white flex flex-col justify-between glow-card relative overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div>
-                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">SEDANG DIPROSES DEV</span>
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">DIPROSES DEV WEB</span>
                             <h4 id="statBugInProgress" class="text-2xl font-black text-amber-50">0 Kendala</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center text-lg">
@@ -238,7 +238,7 @@
                         </div>
                     </div>
                     <div id="statBugTicker" class="mt-2 text-[10px] font-bold bg-maroon-900/90 text-amber-200 px-2.5 py-1 rounded-lg border border-maroon-700/60 inline-block truncate max-w-full">
-                        Tidak ada kendala aktif
+                        Tidak ada perbaikan aktif
                     </div>
                 </div>
 
@@ -247,14 +247,14 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
                     <div class="flex items-start justify-between">
                         <div>
-                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">TIKET TERSELESAIKAN</span>
+                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">BUG REPAIRED</span>
                             <h4 id="statBugResolved" class="text-2xl font-black text-emerald-600">0 Selesai</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shadow-inner">
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
                     </div>
-                    <p class="text-[11px] text-gray-400 mt-2 font-medium">Fitur berjalan normal kembali</p>
+                    <p class="text-[11px] text-gray-400 mt-2 font-medium">Fitur web berjalan lancar</p>
                 </div>
 
                 <!-- Card 4: Tingkat Urgensi -->
@@ -262,14 +262,14 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-500"></div>
                     <div class="flex items-start justify-between">
                         <div>
-                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">TINGKAT URGENSI</span>
+                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">STATUS SYSTEM WEB</span>
                             <h4 id="statBugCritical" class="text-2xl font-black text-amber-800">Normal</h4>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg shadow-inner">
-                            <i class="fa-solid fa-shield-halved"></i>
+                            <i class="fa-solid fa-laptop-code"></i>
                         </div>
                     </div>
-                    <p class="text-[11px] text-gray-400 mt-2 font-medium">Sistem kasir utama beroperasional</p>
+                    <p class="text-[11px] text-gray-400 mt-2 font-medium">Sistem manajemen web beroperasional</p>
                 </div>
 
             </div>
@@ -284,20 +284,21 @@
                             <i class="fa-solid fa-bug"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-gray-900 text-base">Form Lapor Kendala Teknis Baru</h4>
-                            <p class="text-xs text-gray-500">Kirim detail error untuk penanganan cepat</p>
+                            <h4 class="font-bold text-gray-900 text-base">Form Lapor Bug Website Manager</h4>
+                            <p class="text-xs text-gray-500">Isi rincian error aplikasi web untuk perbaikan cepat</p>
                         </div>
                     </div>
 
                     <form onsubmit="submitBugForm(event)" class="space-y-3.5 text-xs">
                         <div>
-                            <label class="font-bold text-gray-700 block mb-1">Modul / Fitur Terkendala</label>
+                            <label class="font-bold text-gray-700 block mb-1">Modul / Fitur Website Terkendala</label>
                             <select id="bugModule" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
-                                <option value="Mesin Kasir & Transaksi POS" selected>Mesin Kasir & Transaksi POS</option>
-                                <option value="Printer Thermal ESC/POS">Printer Thermal ESC/POS</option>
-                                <option value="Pembayaran QRIS & Debit EDC">Pembayaran QRIS & Debit EDC</option>
-                                <option value="Stok & Inventaris Bar">Stok & Inventaris Bar</option>
-                                <option value="Laporan Penjualan & Struk">Laporan Penjualan & Struk</option>
+                                <option value="Dashboard Analytics & Widget Web" selected>Dashboard Analytics & Widget Web</option>
+                                <option value="Manajemen Stok & Bahan Baku (Web UI)">Manajemen Stok & Bahan Baku (Web UI)</option>
+                                <option value="Laporan Penjualan & Export Data Web">Laporan Penjualan & Export Data Web</option>
+                                <option value="Verifikasi & Monitoring QRIS Realtime">Verifikasi & Monitoring QRIS Realtime</option>
+                                <option value="Sesi Login & Autentikasi Pengguna">Sesi Login & Autentikasi Pengguna</option>
+                                <option value="Tampilan Layout & Responsivitas UI Web">Tampilan Layout & Responsivitas UI Web</option>
                             </select>
                         </div>
 
@@ -305,44 +306,44 @@
                             <div>
                                 <label class="font-bold text-gray-700 block mb-1">Tingkat Urgensi</label>
                                 <select id="bugSeverity" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
-                                    <option value="Rendah">Rendah (Pertanyaan / UI)</option>
-                                    <option value="Sedang" selected>Sedang (Fitur Terganggu)</option>
-                                    <option value="Critical">Critical (Sistem Down)</option>
+                                    <option value="Rendah">Rendah (UI / Minor Bug)</option>
+                                    <option value="Sedang" selected>Sedang (Fitur Web Terganggu)</option>
+                                    <option value="Critical">Critical (Aplikasi Web Stalled/Down)</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="font-bold text-gray-700 block mb-1">Perangkat Terdampak</label>
+                                <label class="font-bold text-gray-700 block mb-1">Browser / Perangkat Web</label>
                                 <select id="bugDevice" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-semibold text-gray-800">
-                                    <option value="PC Kepala Cabang" selected>PC Kepala Cabang</option>
-                                    <option value="Tablet POS Barista">Tablet POS Barista</option>
-                                    <option value="Printer Thermal ESC/POS">Printer Thermal ESC/POS</option>
-                                    <option value="Server Kasir Local">Server Kasir Local</option>
+                                    <option value="Google Chrome (Desktop PC Manager)" selected>Google Chrome (Desktop PC Manager)</option>
+                                    <option value="Mozilla Firefox / Edge (Desktop)">Mozilla Firefox / Edge (Desktop)</option>
+                                    <option value="Browser Tablet / Laptop Management">Browser Tablet / Laptop Management</option>
+                                    <option value="Supabase Cloud Database / Realtime API">Supabase Cloud Database / Realtime API</option>
                                 </select>
                             </div>
                         </div>
 
                         <div>
-                            <label class="font-bold text-gray-700 block mb-1">Judul Kendala</label>
-                            <input type="text" id="bugTitle" required placeholder="Contoh: Resi transaksi QRIS tidak otomatis tercetak di printer thermal" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800">
+                            <label class="font-bold text-gray-700 block mb-1">Judul Kendala Web</label>
+                            <input type="text" id="bugTitle" required placeholder="Contoh: Grafik laporan penjualan harian tidak me-refresh otomatis di dashboard" class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800">
                         </div>
 
                         <div>
-                            <label class="font-bold text-gray-700 block mb-1">Deskripsi Detail & Kronologi Error</label>
-                            <textarea id="bugDescription" rows="4" required placeholder="Jelaskan kronologi kejadian, pesan error yang muncul, atau langkah yang sudah dicoba..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800"></textarea>
+                            <label class="font-bold text-gray-700 block mb-1">Deskripsi Detail & Kronologi Bug Website</label>
+                            <textarea id="bugDescription" rows="4" required placeholder="Jelaskan langkah-langkah memicu bug (step to reproduce), pesan error di console browser, atau halaman web yang macet..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:ring-maroon-700 font-medium text-gray-800"></textarea>
                         </div>
 
                         <div>
-                            <label class="font-bold text-gray-700 block mb-1">Lampiran Foto Bukti Screenshot / Error</label>
+                            <label class="font-bold text-gray-700 block mb-1">Lampiran Screenshot / Bukti Foto Error Web</label>
                             <div class="border-2 border-dashed border-gray-300 rounded-xl p-3 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="document.getElementById('bugFile').click()">
                                 <i class="fa-solid fa-cloud-arrow-up text-maroon-700 text-xl mb-1 block"></i>
-                                <span id="bugFileName" class="text-gray-500 font-medium text-[11px]">Klik untuk melampirkan foto / screenshot (PNG, JPG)</span>
+                                <span id="bugFileName" class="text-gray-500 font-medium text-[11px]">Klik untuk melampirkan screenshot website error (PNG, JPG)</span>
                                 <input type="file" id="bugFile" accept="image/*" class="hidden" onchange="updateFileName(this)">
                             </div>
                         </div>
 
                         <button type="submit" id="submitBtn" class="w-full py-3 bg-maroon-vintage hover:bg-maroon-800 text-amber-100 font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-xs border border-maroon-700 cursor-pointer">
                             <i class="fa-solid fa-paper-plane text-amber-300"></i>
-                            <span>Kirim Tiket Kendala Ke IT Developer</span>
+                            <span>Kirim Laporan Bug Ke Web Developer</span>
                         </button>
                     </form>
                 </div>
@@ -352,8 +353,8 @@
                     <div>
                         <div class="p-5 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                                <h4 id="trackingTitle" class="font-bold text-gray-900 text-base">Tracking Tiket Laporan Cabang</h4>
-                                <p class="text-xs text-gray-500">Pantau proses perbaikan kendala oleh Tim Developer IT</p>
+                                <h4 id="trackingTitle" class="font-bold text-gray-900 text-base">Tracking Tiket Bug Website Cabang</h4>
+                                <p class="text-xs text-gray-500">Pantau proses perbaikan kode website oleh Tim Web Developer</p>
                             </div>
                             <select id="filterBugStatus" onchange="renderBugTickets()" class="px-3 py-1.5 text-xs border border-gray-300 rounded-xl font-semibold bg-white text-gray-700 focus:outline-none cursor-pointer">
                                 <option value="all">Semua Status Tiket</option>
@@ -369,8 +370,8 @@
                     </div>
 
                     <div class="p-4 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
-                        <span>Laporan terhubung ke Server Pusat Cloud Coffe Club'RS</span>
-                        <span class="font-semibold text-maroon-700"><i class="fa-solid fa-arrows-rotate mr-1 animate-spin"></i> Live Sync IT</span>
+                        <span>Laporan terhubung langsung ke Web Developer Supabase Cloud</span>
+                        <span class="font-semibold text-maroon-700"><i class="fa-solid fa-arrows-rotate mr-1 animate-spin"></i> Live Sync Web Dev</span>
                     </div>
                 </div>
 
@@ -502,13 +503,13 @@
             if (topBarBranchText) topBarBranchText.innerHTML = `<i class="fa-solid fa-user-tie text-amber-400"></i> Panel Kerja Kepala Cabang — Cabang ${branchUpper}`;
 
             const bannerTitle = document.getElementById('bannerTitle');
-            if (bannerTitle) bannerTitle.innerText = `Lapor Bug & Kendala Teknis Cabang ${branchUpper}`;
+            if (bannerTitle) bannerTitle.innerText = `Lapor Bug & Kendala Aplikasi Web — Cabang ${branchUpper}`;
 
             const trackingTitle = document.getElementById('trackingTitle');
-            if (trackingTitle) trackingTitle.innerText = `Tracking Tiket Laporan Cabang ${branchUpper}`;
+            if (trackingTitle) trackingTitle.innerText = `Tracking Tiket Bug Website Cabang ${branchUpper}`;
 
             const subtext = document.getElementById('statBugTotalSubtext');
-            if (subtext) subtext.innerText = `Riwayat laporan Cabang ${branchUpper}`;
+            if (subtext) subtext.innerText = `Riwayat laporan bug website Cabang ${branchUpper}`;
 
             const userBadge = document.getElementById('sidebarUserName');
             if (userBadge) userBadge.innerHTML = `<i class="fa-solid fa-user-check mr-1.5 text-emerald-400"></i> ${sessionData.nama || 'Kepala Cabang'}`;
@@ -524,13 +525,13 @@
 
                 kasirBugTickets = (data || []).map(b => ({
                     id: b.id,
-                    module: b.modul || 'General',
+                    module: b.modul || 'General Web UI',
                     branch: b.cabang_id,
                     title: b.judul || b.title,
                     description: b.deskripsi || b.description,
                     severity: b.urgensi || 'Sedang',
                     status: b.status || 'Menunggu Review',
-                    devAssigned: b.dev_assigned || 'Tim Developer IT',
+                    devAssigned: b.dev_assigned || 'Tim Web Developer',
                     devNotes: b.dev_notes || '',
                     time: new Date(b.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) + ' WIB'
                 }));
@@ -568,11 +569,11 @@
             if (ticker) {
                 document.getElementById('statBugTicker').innerText = `#${ticker.id}: ${ticker.title.substring(0, 22)}...`;
             } else {
-                document.getElementById('statBugTicker').innerText = "Tidak ada kendala aktif";
+                document.getElementById('statBugTicker').innerText = "Tidak ada perbaikan aktif";
             }
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-gray-400 italic text-xs"><i class="fa-solid fa-folder-open text-2xl block mb-2 opacity-50"></i>Belum ada tiket laporan kendala dari cabang ini.</div>`;
+                container.innerHTML = `<div class="text-center py-12 text-gray-400 italic text-xs"><i class="fa-solid fa-folder-open text-2xl block mb-2 opacity-50"></i>Belum ada tiket laporan bug website dari cabang ini.</div>`;
                 return;
             }
 
@@ -612,14 +613,14 @@
                         <p class="text-xs text-gray-600 bg-white p-2.5 rounded-lg border border-gray-100 leading-relaxed">${ticket.description}</p>
 
                         <div class="pt-2 border-t border-gray-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 text-[11px]">
-                            <span class="text-gray-500 font-medium"><i class="fa-solid fa-user-gear mr-1 text-maroon-700"></i> Dev Assigned: <strong class="text-gray-800">${ticket.devAssigned}</strong></span>
+                            <span class="text-gray-500 font-medium"><i class="fa-solid fa-code mr-1 text-maroon-700"></i> Web Dev Assigned: <strong class="text-gray-800">${ticket.devAssigned}</strong></span>
                             <span class="text-gray-400"><i class="fa-solid fa-calendar-day mr-1"></i> ${ticket.time}</span>
                         </div>
 
                         ${ticket.devNotes ? `
                             <div class="mt-2 p-2.5 bg-amber-50/80 rounded-lg border border-amber-200/80 text-[11px] text-amber-900 flex items-start space-x-2">
-                                <i class="fa-solid fa-code text-maroon-700 mt-0.5"></i>
-                                <div><strong class="font-bold">Catatan Developer IT:</strong> ${ticket.devNotes}</div>
+                                <i class="fa-solid fa-bug text-maroon-700 mt-0.5"></i>
+                                <div><strong class="font-bold">Catatan Web Developer:</strong> ${ticket.devNotes}</div>
                             </div>
                         ` : ''}
                     </div>
@@ -635,7 +636,7 @@
                 fileNameSpan.innerText = `File terlampir: ${input.files[0].name}`;
                 fileNameSpan.classList.add('text-maroon-700', 'font-bold');
             } else {
-                fileNameSpan.innerText = "Klik untuk melampirkan foto / screenshot (PNG, JPG)";
+                fileNameSpan.innerText = "Klik untuk melampirkan screenshot website error (PNG, JPG)";
                 fileNameSpan.classList.remove('text-maroon-700', 'font-bold');
             }
         }
@@ -655,13 +656,14 @@
 
             const payload = {
                 cabang_id: branchClean,
+                kasir_nama: sessionData.nama || 'Kepala Cabang',
                 modul: document.getElementById('bugModule').value,
                 urgensi: document.getElementById('bugSeverity').value,
                 perangkat: document.getElementById('bugDevice').value,
                 judul: document.getElementById('bugTitle').value,
                 deskripsi: document.getElementById('bugDescription').value,
                 status: 'Menunggu Review',
-                dev_assigned: 'Tim Developer IT'
+                dev_assigned: 'Tim Web Developer'
             };
 
             try {
@@ -676,12 +678,12 @@
                     throw new Error("Laporan ditolak oleh database. Pastikan RLS Policy tabel bug_reports di Supabase sudah terbuka!");
                 }
 
-                showToast(`Tiket kendala #${data[0].id} berhasil terkirim ke IT Developer!`, 'success');
+                showToast(`Tiket bug web #${data[0].id} berhasil terkirim ke Web Developer!`, 'success');
 
                 document.getElementById('bugTitle').value = '';
                 document.getElementById('bugDescription').value = '';
                 document.getElementById('bugFile').value = '';
-                document.getElementById('bugFileName').innerText = "Klik untuk melampirkan foto / screenshot (PNG, JPG)";
+                document.getElementById('bugFileName').innerText = "Klik untuk melampirkan screenshot website error (PNG, JPG)";
                 document.getElementById('bugFileName').classList.remove('text-maroon-700', 'font-bold');
 
                 await loadBranchData(activeBranchKey);
@@ -691,7 +693,7 @@
                 showToast('Gagal mengirim tiket: ' + err.message, 'danger');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane text-amber-300"></i> <span>Kirim Tiket Kendala Ke IT Developer</span>`;
+                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane text-amber-300"></i> <span>Kirim Laporan Bug Ke Web Developer</span>`;
             }
         }
 

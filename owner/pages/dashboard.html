@@ -9,6 +9,9 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase SDK Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -184,7 +187,6 @@
                     <i class="fa-solid fa-user-shield mr-1.5 text-amber-300"></i> Executive Owner
                 </span>
                 
-                <!-- KODE BARU (Menggunakan fungsi handleLogout) -->
                 <button onclick="handleLogout()" class="inline-flex items-center space-x-2 bg-maroon-700/80 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/30 shadow-sm cursor-pointer">
                 <span>Keluar</span>
                     <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
@@ -245,18 +247,18 @@
 
                         <div class="mt-6 mb-4">
                             <h4 id="statOmset" class="text-3xl md:text-4xl font-black text-amber-50 tracking-tight drop-shadow">
-                                Rp 240.500.000
+                                Rp 0
                             </h4>
                             <div class="mt-3 inline-flex items-center text-xs font-semibold text-amber-200 bg-amber-900/40 px-3 py-1 rounded-full border border-amber-500/30">
                                 <i class="fa-solid fa-arrow-trend-up mr-1.5 text-amber-300"></i>
-                                <span>+12.8% dibanding bulan lalu</span>
+                                <span>Realtime Sync Cloud</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-200/80 font-medium">
                         <span>Konsolidasi Multi-Cabang</span>
-                        <span>Periode: Oktober 2026</span>
+                        <span>Periode: Realtime System</span>
                     </div>
                 </div>
 
@@ -272,7 +274,7 @@
                                     Laba Bersih (Net Profit)
                                 </span>
                                 <h4 id="statLaba" class="text-2xl font-black text-gray-900 tracking-tight">
-                                    Rp 156.100.000
+                                    Rp 0
                                 </h4>
                             </div>
                             <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg">
@@ -294,7 +296,7 @@
                                     Total Penjualan Hari Ini
                                 </span>
                                 <h4 id="statCup" class="text-2xl font-black text-gray-900 tracking-tight">
-                                    445 Cup
+                                    0 Cup
                                 </h4>
                             </div>
                             <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-700 flex items-center justify-center text-lg">
@@ -303,7 +305,7 @@
                         </div>
                         <div class="mt-3 flex items-center justify-between text-xs">
                             <span class="text-gray-500 font-medium">Rata-rata Tiket:</span>
-                            <span class="font-bold text-gray-800">Rp 22.300 / pesanan</span>
+                            <span id="statAvgTicket" class="font-bold text-gray-800">Rp 0 / pesanan</span>
                         </div>
                     </div>
 
@@ -337,20 +339,20 @@
                                 <div class="flex justify-between items-start mb-1">
                                     <div>
                                         <h5 class="font-bold text-gray-900 text-sm">Cabang Senopati</h5>
-                                        <p class="text-xs text-gray-500">Omset Harian: Rp 5.240.000 • 235 Cup Terjual</p>
+                                        <p id="senopatiSubtext" class="text-xs text-gray-500">Omset Harian: Rp 0 • 0 Cup Terjual</p>
                                     </div>
                                     <div class="text-right">
-                                        <span class="font-black text-gray-900 text-sm block">Rp 128.500.000</span>
-                                        <span class="text-[11px] text-emerald-700 font-semibold">Laba: Rp 83.300.000</span>
+                                        <span id="senopatiTotal" class="font-black text-gray-900 text-sm block">Rp 0</span>
+                                        <span id="senopatiLaba" class="text-[11px] text-emerald-700 font-semibold">Laba: Rp 0</span>
                                     </div>
                                 </div>
                                 <div class="mt-3">
                                     <div class="flex justify-between text-[11px] font-semibold text-gray-500 mb-1">
                                         <span>Kontribusi Omset</span>
-                                        <span class="text-maroon-700">53%</span>
+                                        <span id="senopatiPctText" class="text-maroon-700">0%</span>
                                     </div>
                                     <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-maroon-700 h-2 rounded-full" style="width: 53%"></div>
+                                        <div id="senopatiBar" class="bg-maroon-700 h-2 rounded-full" style="width: 0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -360,20 +362,20 @@
                                 <div class="flex justify-between items-start mb-1">
                                     <div>
                                         <h5 class="font-bold text-gray-900 text-sm">Cabang Kemang</h5>
-                                        <p class="text-xs text-gray-500">Omset Harian: Rp 4.680.000 • 210 Cup Terjual</p>
+                                        <p id="kemangSubtext" class="text-xs text-gray-500">Omset Harian: Rp 0 • 0 Cup Terjual</p>
                                     </div>
                                     <div class="text-right">
-                                        <span class="font-black text-gray-900 text-sm block">Rp 112.000.000</span>
-                                        <span class="text-[11px] text-emerald-700 font-semibold">Laba: Rp 72.800.000</span>
+                                        <span id="kemangTotal" class="font-black text-gray-900 text-sm block">Rp 0</span>
+                                        <span id="kemangLaba" class="text-[11px] text-emerald-700 font-semibold">Laba: Rp 0</span>
                                     </div>
                                 </div>
                                 <div class="mt-3">
                                     <div class="flex justify-between text-[11px] font-semibold text-gray-500 mb-1">
                                         <span>Kontribusi Omset</span>
-                                        <span class="text-maroon-700">47%</span>
+                                        <span id="kemangPctText" class="text-maroon-700">0%</span>
                                     </div>
                                     <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-maroon-700 h-2 rounded-full" style="width: 47%"></div>
+                                        <div id="kemangBar" class="bg-maroon-700 h-2 rounded-full" style="width: 0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -401,7 +403,7 @@
                                 <p class="text-xs text-gray-500">Pertumbuhan omset konsolidasi Coffe Club'RS</p>
                             </div>
                             <span class="bg-emerald-50 text-emerald-700 font-bold text-xs px-2.5 py-1 rounded-full border border-emerald-200 flex items-center">
-                                <i class="fa-solid fa-arrow-trend-up mr-1 text-[10px]"></i> +14.2% YoY
+                                <i class="fa-solid fa-arrow-trend-up mr-1 text-[10px]"></i> Live Sync
                             </span>
                         </div>
 
@@ -413,15 +415,15 @@
                     <div class="grid grid-cols-3 gap-3 pt-3 border-t border-gray-100 text-center">
                         <div class="p-2.5 bg-gray-50 rounded-xl">
                             <span class="text-[10px] text-gray-500 font-bold uppercase block">Pendapatan Kotor</span>
-                            <span id="chartPendapatan" class="text-sm font-black text-gray-900">Rp 240.5 Jt</span>
+                            <span id="chartPendapatan" class="text-sm font-black text-gray-900">Rp 0</span>
                         </div>
                         <div class="p-2.5 bg-red-50/50 rounded-xl">
                             <span class="text-[10px] text-red-600 font-bold uppercase block">Total Biaya & HPP</span>
-                            <span id="chartBiaya" class="text-sm font-black text-red-600">-Rp 84.4 Jt</span>
+                            <span id="chartBiaya" class="text-sm font-black text-red-600">-Rp 0</span>
                         </div>
                         <div class="p-2.5 bg-emerald-50 rounded-xl">
                             <span class="text-[10px] text-emerald-700 font-bold uppercase block">Laba Bersih</span>
-                            <span id="chartLaba" class="text-sm font-black text-emerald-700">+Rp 156.1 Jt</span>
+                            <span id="chartLaba" class="text-sm font-black text-emerald-700">+Rp 0</span>
                         </div>
                     </div>
                 </div>
@@ -432,13 +434,17 @@
     </div>
 
     <script>
+        // Supabase Client Setup
+        const SUPABASE_URL = 'https://vkyqddubwyabbbeegqlj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreXFkZHVid3lhYmJiZWVncWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MDU0MTksImV4cCI6MjEwNzk4MTQxOX0.yqyy-n_vkzrsjNLmfQaQfyox8xd-BUcZtteKukMXvHo';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let audioMuted = false;
         let audioCtx = null;
+        let salesChart = null;
 
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             return audioCtx;
         }
 
@@ -475,7 +481,7 @@
                         osc.stop(ctx.currentTime + idx * 0.06 + 0.3);
                     });
                 }
-            } catch (e) { console.log("Audio not supported or blocked"); }
+            } catch (e) { console.log("Audio not supported"); }
         }
 
         function toggleAudioMute() {
@@ -489,47 +495,8 @@
             }
         }
 
-        let salesChart = null;
-
-        const branchData = {
-            all: {
-                scopeText: '<i class="fa-solid fa-store mr-1.5 text-amber-400"></i>Semua Cabang',
-                omsetSub: 'Konsolidasi Seluruh Cabang',
-                omset: "Rp 240.500.000",
-                laba: "Rp 156.100.000",
-                margin: "64.9%",
-                cups: "445 Cup",
-                pendapatan: "Rp 240.5 Jt",
-                biaya: "-Rp 84.4 Jt",
-                chartData: [172.0, 185.0, 202.0, 212.0, 225.0, 240.5]
-            },
-            senopati: {
-                scopeText: '<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang Senopati',
-                omsetSub: 'Khusus Cabang Senopati',
-                omset: "Rp 128.500.000",
-                laba: "Rp 83.300.000",
-                margin: "64.8%",
-                cups: "235 Cup",
-                pendapatan: "Rp 128.5 Jt",
-                biaya: "-Rp 45.2 Jt",
-                chartData: [92.0, 99.0, 108.0, 114.0, 120.0, 128.5]
-            },
-            kemang: {
-                scopeText: '<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang Kemang',
-                omsetSub: 'Khusus Cabang Kemang',
-                omset: "Rp 112.000.000",
-                laba: "Rp 72.800.000",
-                margin: "65.0%",
-                cups: "210 Cup",
-                pendapatan: "Rp 112.0 Jt",
-                biaya: "-Rp 39.2 Jt",
-                chartData: [80.0, 86.0, 94.0, 98.0, 105.0, 112.0]
-            }
-        };
-
         function initChart() {
             const ctx = document.getElementById('salesLineChart').getContext('2d');
-
             const gradientMaroon = ctx.createLinearGradient(0, 0, 0, 250);
             gradientMaroon.addColorStop(0, 'rgba(128, 19, 40, 0.45)');
             gradientMaroon.addColorStop(0.7, 'rgba(128, 19, 40, 0.10)');
@@ -541,58 +508,106 @@
                     labels: ['Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt'],
                     datasets: [{
                         label: 'Omset (Juta Rp)',
-                        data: branchData.all.chartData,
+                        data: [0, 0, 0, 0, 0, 0],
                         borderColor: '#801328',
                         borderWidth: 3.5,
                         backgroundColor: gradientMaroon,
                         fill: true,
                         tension: 0.35,
-                        pointBackgroundColor: ['#801328', '#801328', '#801328', '#801328', '#801328', '#4A0E17'],
+                        pointBackgroundColor: '#801328',
                         pointBorderColor: '#ffffff',
                         pointBorderWidth: 2,
-                        pointRadius: [5, 5, 5, 5, 5, 8],
-                        pointHoverRadius: 9
+                        pointRadius: 5
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#36080F',
-                            titleFont: { family: 'Montserrat', size: 12, weight: 'bold' },
-                            bodyFont: { family: 'Montserrat', size: 12 },
-                            padding: 10,
-                            cornerRadius: 10,
-                            callbacks: {
-                                label: function(context) {
-                                    return ` Total Omset: Rp ${context.parsed.y} Juta`;
-                                }
-                            }
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                font: { family: 'Montserrat', size: 11, weight: '600' },
-                                color: '#6B7280'
-                            }
-                        },
-                        y: {
-                            grid: { color: '#F3F4F6' },
-                            ticks: {
-                                font: { family: 'Montserrat', size: 11 },
-                                color: '#9CA3AF',
-                                callback: function(value) {
-                                    return 'Rp ' + value + ' Jt';
-                                }
-                            }
+                        x: { grid: { display: false } },
+                        y: { 
+                            beginAtZero: true,
+                            min: 0,
+                            grid: { color: '#F3F4F6' }, 
+                            ticks: { callback: v => 'Rp ' + v + ' Jt' } 
                         }
                     }
                 }
             });
+        }
+
+        async function fetchDashboardRealtimeData() {
+            const selectedVal = document.getElementById('filterCabangGlobal').value;
+
+            try {
+                let query = supabaseClient.from('transaksi').select('*, detail_transaksi(*)');
+                if (selectedVal !== 'all') {
+                    query = query.ilike('cabang_id', `%${selectedVal}%`);
+                }
+
+                const { data, error } = await query;
+                if (error) throw error;
+
+                let totalOmset = 0;
+                let todayOmset = 0;
+                let todayCups = 0;
+                let totalTxCount = data ? data.length : 0;
+
+                let senopatiOmset = 0;
+                let kemangOmset = 0;
+
+                const todayStr = new Date().toISOString().split('T')[0];
+
+                if (data) {
+                    data.forEach(t => {
+                        const amt = parseFloat(t.total_bayar) || 0;
+                        totalOmset += amt;
+
+                        const rawBranch = t.cabang_id ? t.cabang_id.toString().toLowerCase() : '';
+                        if (rawBranch.includes('senopati')) senopatiOmset += amt;
+                        if (rawBranch.includes('kemang')) kemangOmset += amt;
+
+                        if (t.created_at && t.created_at.startsWith(todayStr)) {
+                            todayOmset += amt;
+                            if (t.detail_transaksi) {
+                                t.detail_transaksi.forEach(d => todayCups += (d.qty || 0));
+                            }
+                        }
+                    });
+                }
+
+                const labaBersih = totalOmset * 0.649;
+                const hppBiaya = totalOmset * 0.351;
+                const avgTicket = totalTxCount > 0 ? (totalOmset / totalTxCount) : 0;
+
+                document.getElementById('statOmset').innerText = `Rp ${totalOmset.toLocaleString('id-ID')}`;
+                document.getElementById('statLaba').innerText = `Rp ${labaBersih.toLocaleString('id-ID')}`;
+                document.getElementById('statCup').innerText = `${todayCups} Cup`;
+                document.getElementById('statAvgTicket').innerText = `Rp ${Math.round(avgTicket).toLocaleString('id-ID')} / pesanan`;
+
+                document.getElementById('chartPendapatan').innerText = `Rp ${(totalOmset / 1000000).toFixed(1)} Jt`;
+                document.getElementById('chartBiaya').innerText = `-Rp ${(hppBiaya / 1000000).toFixed(1)} Jt`;
+                document.getElementById('chartLaba').innerText = `+Rp ${(labaBersih / 1000000).toFixed(1)} Jt`;
+
+                // Update Progress Cabang
+                const totalCabang = senopatiOmset + kemangOmset || 1;
+                const senopatiPct = Math.round((senopatiOmset / totalCabang) * 100);
+                const kemangPct = Math.round((kemangOmset / totalCabang) * 100);
+
+                document.getElementById('senopatiTotal').innerText = `Rp ${senopatiOmset.toLocaleString('id-ID')}`;
+                document.getElementById('senopatiLaba').innerText = `Laba: Rp ${(senopatiOmset * 0.648).toLocaleString('id-ID')}`;
+                document.getElementById('senopatiPctText').innerText = `${senopatiPct}%`;
+                document.getElementById('senopatiBar').style.width = `${senopatiPct}%`;
+
+                document.getElementById('kemangTotal').innerText = `Rp ${kemangOmset.toLocaleString('id-ID')}`;
+                document.getElementById('kemangLaba').innerText = `Laba: Rp ${(kemangOmset * 0.65).toLocaleString('id-ID')}`;
+                document.getElementById('kemangPctText').innerText = `${kemangPct}%`;
+                document.getElementById('kemangBar').style.width = `${kemangPct}%`;
+
+            } catch (err) {
+                console.error("Gagal muat data dashboard:", err);
+            }
         }
 
         function handleGlobalFilterChange() {
@@ -600,46 +615,21 @@
             const selectedVal = document.getElementById('filterCabangGlobal').value;
             localStorage.setItem('selectedBranch', selectedVal);
 
-            const data = branchData[selectedVal] || branchData.all;
-
             const sidebarScopeText = document.getElementById('sidebarScopeText');
-            if (sidebarScopeText) sidebarScopeText.innerHTML = data.scopeText;
-
             const bannerScopeBadge = document.getElementById('bannerScopeBadge');
-            if (bannerScopeBadge) bannerScopeBadge.innerText = selectedVal === 'all' ? 'EXECUTIVE OWNER' : selectedVal.toUpperCase();
-
-            document.getElementById('statOmsetSub').innerText = data.omsetSub;
-            document.getElementById('statOmset').innerText = data.omset;
-            document.getElementById('statLaba').innerText = data.laba;
-            document.getElementById('statMargin').innerText = data.margin;
-            document.getElementById('statCup').innerText = data.cups;
-
-            document.getElementById('chartPendapatan').innerText = data.pendapatan;
-            document.getElementById('chartBiaya').innerText = data.biaya;
-            document.getElementById('chartLaba').innerText = data.laba;
-
-            const senopatiCard = document.getElementById('cardBranchSenopati');
-            const kemangCard = document.getElementById('cardBranchKemang');
-            const badge = document.getElementById('branchActiveBadge');
 
             if (selectedVal === 'senopati') {
-                if (senopatiCard) senopatiCard.style.display = 'block';
-                if (kemangCard) kemangCard.style.display = 'none';
-                if (badge) badge.innerText = '1 Cabang Terpilih';
+                if (sidebarScopeText) sidebarScopeText.innerHTML = '<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang Senopati';
+                if (bannerScopeBadge) bannerScopeBadge.innerText = 'SENOPATI';
             } else if (selectedVal === 'kemang') {
-                if (senopatiCard) senopatiCard.style.display = 'none';
-                if (kemangCard) kemangCard.style.display = 'block';
-                if (badge) badge.innerText = '1 Cabang Terpilih';
+                if (sidebarScopeText) sidebarScopeText.innerHTML = '<i class="fa-solid fa-location-dot mr-1.5 text-amber-400"></i>Cabang Kemang';
+                if (bannerScopeBadge) bannerScopeBadge.innerText = 'KEMANG';
             } else {
-                if (senopatiCard) senopatiCard.style.display = 'block';
-                if (kemangCard) kemangCard.style.display = 'block';
-                if (badge) badge.innerText = '2 Cabang Aktif';
+                if (sidebarScopeText) sidebarScopeText.innerHTML = '<i class="fa-solid fa-store mr-1.5 text-amber-400"></i>Semua Cabang';
+                if (bannerScopeBadge) bannerScopeBadge.innerText = 'EXECUTIVE OWNER';
             }
 
-            if (salesChart) {
-                salesChart.data.datasets[0].data = data.chartData;
-                salesChart.update();
-            }
+            fetchDashboardRealtimeData();
         }
 
         window.onload = function() {
